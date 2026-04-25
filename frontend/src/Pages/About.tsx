@@ -132,7 +132,7 @@ const About: React.FC = () => {
         <section className="relative min-h-[92vh] grid md:grid-cols-2 overflow-hidden bg-[#fefce8]">
           <div className="flex flex-col justify-center p-16 md:p-20 relative z-[2] md:px-16 md:py-20">
             <span className="inline-flex items-center gap-2 bg-green-100 text-green-700 text-[0.75rem] font-semibold tracking-wide uppercase py-1.5 px-4 rounded-full w-fit mb-6 animate-[fadeUp_0.6s_ease_both]">
-              🌿 Grocery Shop
+              🌿 Fresh Shop
             </span>
 
             <h1 className="font-sans text-[clamp(2.5rem,5vw,4rem)] font-bold leading-[1.2] mb-5 animate-[fadeUp_0.6s_0.1s_ease_both] tracking-[-0.02em]">

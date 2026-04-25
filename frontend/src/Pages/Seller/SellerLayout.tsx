@@ -131,7 +131,7 @@ const SellerLayout: React.FC = () => {
           <NavLink to="/" className="flex items-center gap-2 text-none">
             <div className="w-2 h-2 rounded-full bg-[#1a1a1a]" />
             <span className="font-mono text-[13px] font-medium tracking-[0.08em] uppercase">
-              Grocery Mart
+              Fresh Mart
             </span>
           </NavLink>
 

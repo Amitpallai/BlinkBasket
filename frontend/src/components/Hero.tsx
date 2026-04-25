@@ -75,7 +75,7 @@ const Hero: React.FC = () => {
       <div className="hidden lg:block relative overflow-hidden bg-[#eaf2ec]">
         <img
           src="https://images.unsplash.com/photo-1734076459162-fa4e3ab91633?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          alt="Fresh grocery haul"
+          alt="Fresh Fresh haul"
           className="w-full h-full object-cover animate-[scaleIn_1.1s_0.1s_ease_both]"
         />
         

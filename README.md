@@ -1,6 +1,6 @@
-# 🛒 Grocery-Mart
 
-A full-stack e-commerce web application for seamless online grocery shopping. The platform provides a modern, intuitive interface for customers to browse products, manage carts, and place orders, while offering a robust dashboard for sellers to manage inventory and fulfill orders.
+
+A full-stack e-commerce web application for seamless online Fresh shopping. The platform provides a modern, intuitive interface for customers to browse products, manage carts, and place orders, while offering a robust dashboard for sellers to manage inventory and fulfill orders.
 
 **Live Demo:** [Coming Soon]
 
@@ -12,7 +12,7 @@ A full-stack e-commerce web application for seamless online grocery shopping. Th
 - **Product Browsing** - Explore products by category with search functionality
 - **Product Details** - View comprehensive product information with images
 - **Cart Management** - Add, update, or remove items with real-time updates
-- **Order Placement** - Multiple payment options (UPI, Stripe, Cash on Delivery)
+- **Order Placement** - Multiple payment options (UPI, Cash on Delivery)
 - **Order Tracking** - View order history and real-time order status
 - **Address Management** - Save and manage delivery addresses
 - **User Authentication** - Secure signup, login, and profile management
@@ -37,7 +37,7 @@ A full-stack e-commerce web application for seamless online grocery shopping. Th
 | **Database** | MongoDB with Mongoose ODM |
 | **Authentication** | JWT (JSON Web Tokens), Secure Cookies |
 | **File Uploads** | Multer, Cloudinary API |
-| **Payments** | Stripe, UPI Integration |
+| **Payments** | UPI Integration |
 | **UI Components** | Shadcn/ui, React Hot Toast |
 | **Deployment** | Vercel (Frontend & Backend) |
 
@@ -46,7 +46,7 @@ A full-stack e-commerce web application for seamless online grocery shopping. Th
 ## 📁 Project Structure
 
 ```
-Grocery-Mart/
+Fresh-Mart/
 ├── backend/
 │   ├── src/
 │   │   ├── config/          # Configuration files (CORS, environment, services)
@@ -100,7 +100,6 @@ Grocery-Mart/
 - **Node.js** v16+ and npm/yarn
 - **MongoDB** (local or Atlas connection string)
 - **Cloudinary** account (for image uploads)
-- **Stripe** account (for payment processing)
 
 ### Backend Setup
 
@@ -125,7 +124,7 @@ Grocery-Mart/
    NODE_ENV=development
 
    # Database
-   MONGODB_URL=mongodb+srv://username:password@cluster.mongodb.net/grocerymart
+   MONGODB_URL=mongodb+srv://username:password@cluster.mongodb.net/Freshmart
 
    # JWT
    JWT_SECRET=your_secure_jwt_secret_key
@@ -139,10 +138,6 @@ Grocery-Mart/
    CLOUDINARY_CLOUD_NAME=your_cloud_name
    CLOUDINARY_API_KEY=your_api_key
    CLOUDINARY_API_SECRET=your_api_secret
-
-   # Stripe (Payments)
-   STRIPE_PUBLISHABLE_KEY=pk_test_your_key
-   STRIPE_SECRET_KEY=sk_test_your_key
    ```
 
 5. Start the development server:
@@ -232,7 +227,7 @@ DELETE /api/address/:id            - Delete address
 ### Payment Routes
 ```
 POST   /api/payment/verify         - Verify UPI payment
-POST   /api/payment/stripe         - Process Stripe payment
+POST   /api/payment/upi            - Process UPI payment
 ```
 
 ### Seller Routes
@@ -261,7 +256,6 @@ GET    /api/transaction/seller     - Get seller transactions
 ## 💳 Payment Methods
 
 - **UPI** - Indian payment system with multiple app support (Google Pay, PhonePe, Paytm, BHIM)
-- **Stripe** - Credit/Debit card payments
 - **Cash on Delivery** - COD option for eligible orders
 
 ---
@@ -274,7 +268,6 @@ GET    /api/transaction/seller     - Get seller transactions
 - `jsonwebtoken` - JWT authentication
 - `multer` - File upload handling
 - `cloudinary` - Cloud image storage
-- `stripe` - Payment processing
 - `dotenv` - Environment variables
 
 ### Frontend
@@ -345,11 +338,6 @@ GET    /api/transaction/seller     - Get seller transactions
 - Check file size limits
 - Ensure bucket permissions are correct
 
-### Stripe Payment Issues
-- Use Stripe test keys in development
-- Verify webhook endpoints are configured
-- Check for API key mismatches
-
 ---
 
 ## 📄 License
@@ -382,7 +370,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 - [ ] Clone the repository
 - [ ] Install Node.js and MongoDB
-- [ ] Create Cloudinary and Stripe accounts
+- [ ] Create Cloudinary account
 - [ ] Set up backend `.env` file
 - [ ] Set up frontend `.env` file
 - [ ] Run `npm install` in both directories

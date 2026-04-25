@@ -66,7 +66,7 @@ const Footer: React.FC = () => {
               Fresh<em>Mart</em><span className="bl-tm">™</span>
             </h2>
             <p className="bl-tagline">
-              Modern grocery shopping — farm-fresh products, curated with care and delivered with speed.
+              Modern Fresh shopping — farm-fresh products, curated with care and delivered with speed.
             </p>
             <div className="bl-badge">
               <div className="bl-dot" />

@@ -182,7 +182,7 @@ export const AddProduct = () => {
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g. Grocery"
+                    placeholder="e.g. Fresh"
                     className={inputClass}
                   />
                 </div>
