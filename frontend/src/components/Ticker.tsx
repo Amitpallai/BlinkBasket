@@ -42,7 +42,7 @@ const Ticker: React.FC = () => {
       `}</style>
 
       <div
-        className="ticker-wrapper relative overflow-hidden bg-gradient-to-br from-[#141210] to-[#1e1a16] border-y-[0.5px] border-white/10"
+        className="ticker-wrapper relative overflow-hidden bg-gradient-to-br from-[#141210] to-[#1e1a16]  border-white/10"
         aria-hidden="true"
       >
         {/* Fade edges */}

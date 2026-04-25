@@ -103,7 +103,7 @@ const Newsletter: React.FC = () => {
 
       {/* ── Trust Bar ─────────────────────────────────────────────── */}
       <section
-        className="bg-white py-14"
+        className=" py-14  bg-[#F7F6F2]"
         style={{
           borderTop: "1px solid #F7F6F2",
           borderBottom: "1px solid #F7F6F2",

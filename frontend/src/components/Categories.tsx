@@ -66,10 +66,10 @@ const Categories: React.FC = () => {
 
       <section className="relative w-full px-3 sm:px-4 md:px-6 lg:px-8">
         {/* Header */}
-        <div className=" flex items-center justify-between px-1">
+        <div className=" flex items-center justify-between ">
           <div>
-            <h2 className="text-base font-semibold tracking-tight text-[#1a2e1a] sm:text-lg md:text-xl">
-              Shop by category
+            <h2 className="text-base font-semibold tracking-tight text-[#1a2e1a] text-xl lg:text-XL md:text-2xl ">
+              Shop By Category
             </h2>
             <p className="mt-0.5 text-xs text-[#7a7060]">
               {(categories as Category[]).length} categories

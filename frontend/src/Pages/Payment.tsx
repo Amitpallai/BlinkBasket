@@ -223,8 +223,8 @@ const QRTab = ({
   currency: string;
   orderId: string;
 }) => {
-  const MERCHANT_UPI = "blenesfresh@ybl";
-  const MERCHANT_NAME = "Blenes Fresh";
+  const MERCHANT_UPI = import.meta.env.VITE_MERCHANT_UPI || "FreshMert@ybl";
+  const MERCHANT_NAME = "Fresh Mart";
   const upiString = `upi://pay?pa=${MERCHANT_UPI}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${amount}&cu=INR&tn=${encodeURIComponent("Order " + orderId)}`;
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&bgcolor=fffdf9&color=1a2e1a&data=${encodeURIComponent(upiString)}`;
 

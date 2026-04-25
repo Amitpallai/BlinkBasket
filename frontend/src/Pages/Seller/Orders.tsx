@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { useAppContext } from "../../context/AppContext";
 import toast from "react-hot-toast";
@@ -30,6 +32,7 @@ type Order = {
 const Orders = () => {
   const { currency, axios } = useAppContext();
   const [orders, setOrders] = useState<Order[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const fetchOrder = async () => {
     try {
@@ -48,6 +51,13 @@ const Orders = () => {
     }
   };
 
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await fetchOrder();
+    // Smooth transition for the spinning icon
+    setTimeout(() => setRefreshing(false), 600);
+  };
+
   useEffect(() => {
     fetchOrder();
   }, []);
@@ -59,20 +69,28 @@ const Orders = () => {
 
         .ord-wrap {
           font-family: 'DM Sans', sans-serif;
+          padding: 20px;
         }
 
         .ord-header {
           display: flex;
-          align-items: baseline;
-          gap: 10px;
+          align-items: center;
+          justify-content: space-between;
           margin-bottom: 24px;
         }
 
+        .ord-title-group {
+          display: flex;
+          align-items: baseline;
+          gap: 10px;
+        }
+
         .ord-title {
-          font-size: 18px;
+          font-size: 19px;
           font-weight: 500;
           color: #1a1a1a;
           letter-spacing: -0.01em;
+          margin: 0;
         }
 
         .ord-count {
@@ -80,6 +98,44 @@ const Orders = () => {
           font-size: 11px;
           color: #aaa;
           letter-spacing: 0.06em;
+        }
+
+        /* ─── Refresh Button ─── */
+        .ord-refresh-btn {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 8px 16px;
+          border-radius: 9px;
+          background: #fff;
+          border: 1px solid #e0e0da;
+          font-family: 'DM Sans', sans-serif;
+          font-size: 13px;
+          font-weight: 500;
+          color: #1a1a1a;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .ord-refresh-btn:hover {
+          background: #fafaf8;
+          border-color: #10b981;
+          color: #10b981;
+        }
+
+        .ord-refresh-btn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        .spin {
+          animation: ord-spin 0.8s linear infinite;
+          display: inline-block;
+        }
+
+        @keyframes ord-spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
 
         .ord-list {
@@ -96,7 +152,6 @@ const Orders = () => {
           display: grid;
           grid-template-columns: 1fr 180px 90px 130px;
           align-items: center;
-          gap: 0;
           background: #fff;
           transition: background 0.1s ease;
         }
@@ -131,7 +186,6 @@ const Orders = () => {
           align-items: center;
           justify-content: center;
           color: #999;
-          margin-top: 1px;
         }
 
         .ord-item-row {
@@ -151,7 +205,6 @@ const Orders = () => {
           font-family: 'DM Mono', monospace;
           font-size: 11px;
           color: #aaa;
-          letter-spacing: 0.04em;
         }
 
         .ord-address-name {
@@ -174,24 +227,18 @@ const Orders = () => {
           color: #1a1a1a;
         }
 
-        .ord-meta {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-        }
-
         .ord-meta-row {
           display: flex;
           align-items: center;
           gap: 6px;
           font-size: 12px;
           color: #888;
+          margin-bottom: 4px;
         }
 
         .ord-meta-label {
           font-family: 'DM Mono', monospace;
           font-size: 10px;
-          letter-spacing: 0.08em;
           text-transform: uppercase;
           color: #bbb;
           width: 44px;
@@ -209,9 +256,9 @@ const Orders = () => {
         }
 
         .ord-badge-paid {
-          background: #f0faf4;
-          color: #2d7a4f;
-          border: 1px solid #c3e8d2;
+          background: #ecfdf5;
+          color: #065f46;
+          border: 1px solid #d1fae5;
         }
 
         .ord-badge-pending {
@@ -239,14 +286,9 @@ const Orders = () => {
           font-family: 'DM Mono', monospace;
           font-size: 10px;
           font-weight: 500;
-          letter-spacing: 0.1em;
           text-transform: uppercase;
           color: #aaa;
           border-right: 1px solid #f0f0ec;
-        }
-
-        .ord-thead-cell:last-child {
-          border-right: none;
         }
 
         .ord-empty {
@@ -255,34 +297,30 @@ const Orders = () => {
           text-align: center;
           color: #ccc;
           font-size: 13px;
-          font-style: italic;
         }
 
         @media (max-width: 768px) {
-          .ord-row {
-            grid-template-columns: 1fr;
-          }
-          .ord-thead {
-            display: none;
-          }
-          .ord-cell {
-            border-right: none;
-            border-bottom: 1px solid #f0f0ec;
-            padding: 14px 16px;
-          }
-          .ord-cell:last-child {
-            border-bottom: none;
-          }
-          .ord-row {
-            border-radius: 0;
-          }
+          .ord-row, .ord-thead { grid-template-columns: 1fr; }
+          .ord-thead { display: none; }
+          .ord-cell { border-right: none; border-bottom: 1px solid #f0f0ec; }
         }
       `}</style>
 
       <div className="ord-wrap">
         <div className="ord-header">
-          <h2 className="ord-title">Orders</h2>
-          <span className="ord-count">{orders.length} total</span>
+          <div className="ord-title-group">
+            <h2 className="ord-title">Orders</h2>
+            <span className="ord-count">{orders.length} total</span>
+          </div>
+
+          <button 
+            className="ord-refresh-btn" 
+            onClick={handleRefresh}
+            disabled={refreshing}
+          >
+            <span className={refreshing ? 'spin' : ''}>↻</span>
+            {refreshing ? 'Updating...' : 'Refresh'}
+          </button>
         </div>
 
         <div className="ord-list">
@@ -301,87 +339,49 @@ const Orders = () => {
                 <div className="ord-cell">
                   <div className="ord-items-cell">
                     <div className="ord-icon">
-                      <svg
-                        width="16"
-                        height="16"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.6"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"
-                        />
+                      <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10" />
                       </svg>
                     </div>
-
                     <div>
                       {order.items?.length ? (
                         order.items.map((item, i) => (
                           <div key={i} className="ord-item-row">
-                            <span className="ord-item-name">
-                              {item.product?.name || "Unnamed product"}
-                            </span>
+                            <span className="ord-item-name">{item.product?.name || "Product"}</span>
                             <span className="ord-item-qty">×{item.quantity}</span>
                           </div>
                         ))
                       ) : (
-                        <div className="ord-item-row">
-                          <span className="ord-item-name">No items</span>
-                        </div>
+                        <span className="ord-item-name">No items</span>
                       )}
                     </div>
                   </div>
                 </div>
 
                 <div className="ord-cell">
-                  <p className="ord-address-name">
-                    {order.address?.firstName || ""} {order.address?.lastName || ""}
-                  </p>
+                  <p className="ord-address-name">{order.address?.firstName} {order.address?.lastName}</p>
                   <p className="ord-address-detail">
-                    {order.address?.city || "—"}, {order.address?.state || "—"}
-                    <br />
-                    {order.address?.country || "—"}
+                    {order.address?.city}, {order.address?.state}<br />
+                    {order.address?.country}
                   </p>
                 </div>
 
                 <div className="ord-cell">
-                  <span className="ord-amount">
-                    {currency}
-                    {Number(order.amount || 0).toFixed(2)}
-                  </span>
+                  <span className="ord-amount">{currency}{Number(order.amount || 0).toFixed(2)}</span>
                 </div>
 
                 <div className="ord-cell">
-                  <div className="ord-meta">
-                    <div className="ord-meta-row">
-                      <span className="ord-meta-label">Date</span>
-                      <span>
-                        {new Date(order.createdAt).toLocaleDateString("en-GB", {
-                          day: "2-digit",
-                          month: "short",
-                          year: "numeric",
-                        })}
-                      </span>
-                    </div>
-
-                    <div className="ord-meta-row">
-                      <span className="ord-meta-label">Via</span>
-                      <span>{order.paymentType || "—"}</span>
-                    </div>
-
-                    <div className="ord-meta-row" style={{ marginTop: "2px" }}>
-                      <span
-                        className={`ord-badge ${
-                          order.isPaid ? "ord-badge-paid" : "ord-badge-pending"
-                        }`}
-                      >
-                        <span className="ord-badge-dot" />
-                        {order.isPaid ? "Paid" : "Pending"}
-                      </span>
-                    </div>
+                  <div className="ord-meta-row">
+                    <span className="ord-meta-label">Date</span>
+                    <span>{new Date(order.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</span>
+                  </div>
+                  <div className="ord-meta-row">
+                    <span className="ord-meta-label">Via</span>
+                    <span>{order.paymentType}</span>
+                  </div>
+                  <div className={`ord-badge ${order.isPaid ? "ord-badge-paid" : "ord-badge-pending"}`}>
+                    <span className="ord-badge-dot" />
+                    {order.isPaid ? "Paid" : "Pending"}
                   </div>
                 </div>
               </div>

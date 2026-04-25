@@ -102,7 +102,7 @@ const TagIcon = () => (
 
 // ── Empty State ────────────────────────────────────────
 const EmptyCart = ({ onShop }: { onShop: () => void }) => (
-  <div className="min-h-screen bg-[#f5f0e8] flex flex-col items-center justify-center text-center px-4">
+  <div className="min-h-screen bg-[#F7F6F2] flex flex-col items-center justify-center text-center px-4">
     <div className="w-24 h-24 bg-[#fffdf9] border border-[#ede8df] rounded-3xl flex items-center justify-center mb-6">
       <svg
         width="40"
@@ -125,7 +125,7 @@ const EmptyCart = ({ onShop }: { onShop: () => void }) => (
     </p>
     <button
       onClick={onShop}
-      className="flex items-center gap-2 bg-[#1a2e1a] text-[#d4eecc] px-6 py-3 rounded-[14px] text-sm font-medium hover:bg-[#2a4a28] transition-colors"
+      className="flex items-center gap-2 bg-green-700 text-[#d4eecc] px-6 py-3 rounded-[14px] text-sm font-medium hover:bg-green-800 transition-colors"
     >
       Continue shopping <ArrowRight />
     </button>

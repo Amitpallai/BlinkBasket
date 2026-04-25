@@ -17,7 +17,7 @@ const QtyControl: React.FC<{ qty: number; onChange: (n: number) => void }> = ({
       −
     </button>
 
-    <span className="flex h-11 flex-1 items-center justify-center border-x border-gray-200 font-semibold">
+    <span className="flex h-11 flex-1 items-center justify-center bg-gray-50 font-semibold">
       {qty}
     </span>
 

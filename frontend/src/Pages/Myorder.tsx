@@ -140,7 +140,7 @@ const Myorder: React.FC = () => {
   }
 
   return (
-    <div className="mt-16 pb-20 px-4 md:px-8 lg:px-16 max-w-4xl mx-auto">
+    <div className="mt-20 pb-20 px-4 md:px-8 lg:px-16 max-w-6xl mx-auto">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-semibold text-[#1a2e1a]">My Orders</h1>
@@ -193,10 +193,10 @@ const Myorder: React.FC = () => {
             return (
               <div
                 key={order._id}
-                className="bg-[#fffdf9] border border-[#ede8df] rounded-[20px] overflow-hidden transition-shadow hover:shadow-md"
+                className="bg-white border border-[#ede8df] rounded-[20px] overflow-hidden transition-shadow hover:shadow-md "
               >
                 {/* Top */}
-                <div className="flex justify-between items-start gap-4 px-5 py-4 border-b border-[#ede8df] flex-wrap">
+                <div className="flex justify-between items-start gap-4 px-6 py-4 border-b border-[#ede8df] flex-wrap">
                   <div>
                     <p className="text-[11px] text-[#a0966e] uppercase font-medium">
                       Order · {order._id?.slice(-8).toUpperCase() || 'UNKNOWN'}

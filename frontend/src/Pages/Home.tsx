@@ -35,6 +35,10 @@ const Home: React.FC = () => {
     >
        <Hero />
 
+{/* Ticker sits flush below hero */}
+      <div className="section-reveal opacity-0 transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)]">
+        <Ticker />
+      </div>
 
       {/* Categories — soft top divider */}
       <div className="section-reveal opacity-0 translate-y-7 transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] transition-delay-[60ms]">
@@ -51,10 +55,7 @@ const Home: React.FC = () => {
       </div>
 
       
-      {/* Ticker sits flush below hero */}
-      <div className="section-reveal opacity-0 translate-y-7 transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)]">
-        <Ticker />
-      </div>
+      
 
       {/* Newsletter — full-bleed, rounded top edge */}
       <div className="section-reveal mt-6 opacity-0 translate-y-7 transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] transition-delay-[40ms]">
