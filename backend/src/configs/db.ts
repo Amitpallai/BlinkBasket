@@ -9,18 +9,23 @@ const connectDB = async (): Promise<void> => {
         }
 
         mongoose.connection.on("connected", () => {
-            console.log("Database is connected");
+            console.log("✓ Database is connected");
+        });
+
+        mongoose.connection.on("error", (error) => {
+            console.error("✗ Database connection error:", error);
         });
 
         await mongoose.connect(MONGODB_URL);
 
     } catch (error: unknown) {
         if (error instanceof Error) {
-            console.error("DB Connection Error:", error.message);
+            console.error("✗ DB Connection Error:", error.message);
         } else {
-            console.error("Unknown DB Connection Error");
+            console.error("✗ Unknown DB Connection Error");
         }
-        process.exit(1); // optional: stop app if DB fails
+        // Don't exit process - serverless functions need to stay alive
+        // The connection will retry on next request
     }
 };
 
