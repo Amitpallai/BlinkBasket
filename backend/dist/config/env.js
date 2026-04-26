@@ -10,7 +10,7 @@ exports.env = {
     nodeEnv: process.env.NODE_ENV ?? "development",
     port: toPort(process.env.PORT, 4000),
     clientOrigins: (process.env.CLIENT_ORIGINS ??
-        "http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174,http://127.0.0.1:5174")
+        "https://grocery-mart-alpha.vercel.app, http://localhost:5173")
         .split(",")
         .map((origin) => origin.trim())
         .filter(Boolean),

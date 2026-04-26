@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sellerLogout = exports.sellerLogin = exports.sellerIsAuth = void 0;
-const bcrypt_1 = __importDefault(require("bcrypt"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const Seller_1 = __importDefault(require("../models/Seller"));
 // ==================== SELLER CHECK AUTH ====================
@@ -65,7 +65,7 @@ const sellerLogin = async (req, res) => {
             // Find or create default seller
             seller = await Seller_1.default.findOne({ email: defaultEmail });
             if (!seller) {
-                const hashedPassword = await bcrypt_1.default.hash(defaultPassword, 10);
+                const hashedPassword = await bcryptjs_1.default.hash(defaultPassword, 10);
                 seller = new Seller_1.default({
                     email: defaultEmail,
                     password: hashedPassword,
@@ -75,9 +75,9 @@ const sellerLogin = async (req, res) => {
             }
             else {
                 // Ensure password is correct
-                const isMatch = await bcrypt_1.default.compare(defaultPassword, seller.password);
+                const isMatch = await bcryptjs_1.default.compare(defaultPassword, seller.password);
                 if (!isMatch) {
-                    const hashedPassword = await bcrypt_1.default.hash(defaultPassword, 10);
+                    const hashedPassword = await bcryptjs_1.default.hash(defaultPassword, 10);
                     seller.password = hashedPassword;
                     await seller.save();
                     console.log("✅ Default seller password updated during login");
@@ -93,7 +93,7 @@ const sellerLogin = async (req, res) => {
                     message: "Invalid credentials",
                 });
             }
-            const isMatch = await bcrypt_1.default.compare(password, seller.password);
+            const isMatch = await bcryptjs_1.default.compare(password, seller.password);
             if (!isMatch) {
                 return res.status(401).json({
                     success: false,

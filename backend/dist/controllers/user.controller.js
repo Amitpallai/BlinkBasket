@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.logout = exports.isAuth = exports.login = exports.signup = void 0;
-const bcrypt_1 = __importDefault(require("bcrypt"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const User_1 = __importDefault(require("../models/User"));
 // ==================== SIGNUP ====================
@@ -24,7 +24,7 @@ const signup = async (req, res) => {
                 message: "User already exists",
             });
         }
-        const hashedPassword = await bcrypt_1.default.hash(password, 10);
+        const hashedPassword = await bcryptjs_1.default.hash(password, 10);
         const user = await User_1.default.create({
             name,
             email,
@@ -79,7 +79,7 @@ const login = async (req, res) => {
                 message: "Invalid credentials",
             });
         }
-        const isMatch = await bcrypt_1.default.compare(password, user.password);
+        const isMatch = await bcryptjs_1.default.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({
                 success: false,
