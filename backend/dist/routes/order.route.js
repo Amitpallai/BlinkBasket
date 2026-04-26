@@ -11,5 +11,4 @@ const orderRoute = express_1.default.Router();
 orderRoute.post('/cod', authUser_1.authUser, order_controller_1.placeOrderCOD);
 orderRoute.get('/user', authUser_1.authUser, order_controller_1.getUserOrder);
 orderRoute.get('/seller', sellerAuth_1.sellerAuth, order_controller_1.getAllOrders);
-orderRoute.post('/stripe', authUser_1.authUser, order_controller_1.placeOrderStripe);
 exports.default = orderRoute;
