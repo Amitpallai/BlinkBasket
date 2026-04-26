@@ -12,7 +12,7 @@ import axios from "axios";
 
 // ✅ GLOBAL AXIOS CONFIG
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
+axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL || "https://grocery-mart-npj4.vercel.app";
 
 // ✅ FIXED INTERCEPTORS - FULL DUAL TOKEN SUPPORT (COOKIE + LOCALSTORAGE + HEADERS)
 axios.interceptors.request.use(
