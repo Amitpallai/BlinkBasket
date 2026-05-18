@@ -7,7 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 import axios from "axios";
 
 // ✅ GLOBAL AXIOS CONFIG
