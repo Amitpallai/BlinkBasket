@@ -1,7 +1,7 @@
 import React from "react";
 import { useAppContext } from "../../context/AppContext";
 import { NavLink, Outlet } from "react-router-dom";
-import toast from "react-hot-toast";
+import {toast} from "sonner";
 
 interface SidebarLink {
   name: string;

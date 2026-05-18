@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../context/AppContext";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 import axios from "axios";
 
 interface Product {

@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
+import { Toaster as SonnerToaster } from "sonner";
 import { useAppContext } from "./context/AppContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -9,27 +9,40 @@ function App() {
   const location = useLocation();
   const { isSeller, user, showSellerLogin, showSellerSignup } = useAppContext();
 
-  // ✅ Hide Navbar/Footer on auth pages + modals
-  const hideNavbarFooter = [
-    "/login", 
-    "/seller/login", 
+  // ✅ Routes where footer should be hidden (but navbar visible)
+  const hideFooterRoutes = [
+    "/cart",
+    "/address",
+    "/confirmation",
+    "/payment",
+    '/profile'
+  ];
+  
+  // ✅ Routes where both navbar and footer should be hidden
+  const hideBothRoutes = [
+    "/login",
+    "/seller/login",
     "/seller/signup"
-  ].includes(location.pathname) || showSellerLogin || showSellerSignup;
+  ];
+  
+  // Check if current path should hide footer only
+  const shouldHideFooter = hideFooterRoutes.includes(location.pathname);
+  
+  // Check if current path should hide both navbar and footer
+  const shouldHideBoth = hideBothRoutes.includes(location.pathname) 
+    || showSellerLogin 
+    || showSellerSignup
+    || location.pathname.startsWith("/seller");
 
   return (
     <>
-      {/* Navbar - HIDDEN on auth/seller */}
-      {!hideNavbarFooter && !location.pathname.startsWith("/seller") && <Navbar />}
+      {/* Navbar - Hidden only on auth/seller pages, visible on cart/address/confirmation */}
+      {!shouldHideBoth && <Navbar />}
 
-      <Toaster 
-        position="top-right"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            color: 'white',
-          },
-        }}
+      <SonnerToaster 
+        position="bottom-right"
+       
+        
       />
 
       {/* Main Content */}
@@ -37,8 +50,8 @@ function App() {
         <AppRoutes user={user} isSeller={isSeller} />
       </main>
 
-      {/* Footer - HIDDEN on auth/seller */}
-      {!hideNavbarFooter && !location.pathname.startsWith("/seller") && <Footer />}
+      {/* Footer - Hidden on auth/seller pages AND cart/address/confirmation */}
+      {!shouldHideBoth && !shouldHideFooter && <Footer />}
     </>
   );
 }

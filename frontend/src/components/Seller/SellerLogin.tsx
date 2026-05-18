@@ -1,6 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useAppContext } from "@/context/AppContext";
 import { useLocation } from "react-router-dom";
+
+const keyframesStyle = `
+  @keyframes sl-slide-up {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes sl-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+`;
 
 const SellerLogin: React.FC = () => {
   const { sellerLogin, setShowSellerLogin, navigate, isSeller } = useAppContext();
@@ -9,15 +20,10 @@ const SellerLogin: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const location = useLocation();
-  
-  // Check if this is being used as a standalone page or modal
-  const isStandalonePage = location.pathname === "/seller/login";
+  const isInitialMount = useRef(true);
 
-  useEffect(() => {
-    if (isSeller) navigate("/seller");
-  }, [isSeller, navigate]);
+  const isStandalonePage = location.pathname === "/api/seller/login";
 
-  // Only add escape key handler if this is a modal
   useEffect(() => {
     if (!isStandalonePage) {
       const handleEsc = (e: KeyboardEvent) => {
@@ -31,27 +37,38 @@ const SellerLogin: React.FC = () => {
     }
   }, [setShowSellerLogin, navigate, isStandalonePage]);
 
+  useEffect(() => {
+    if (!isInitialMount.current && isSeller && location.pathname !== "/seller") {
+      navigate("/seller");
+    }
+    isInitialMount.current = false;
+  }, [isSeller, navigate, location.pathname]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
       await sellerLogin(email, password);
+      if (!isStandalonePage) setShowSellerLogin(false);
+      navigate("/seller");
+    } catch (error) {
+      console.error("Login failed:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     if (!isStandalonePage) {
       setShowSellerLogin(false);
       navigate(-1);
     } else {
       navigate("/");
     }
-  };
+  }, [isStandalonePage, setShowSellerLogin, navigate]);
 
-  // Reusable card component
-  const LoginCard = () => (
+  // ✅ Inline card JSX — no nested component definition
+  const card = (
     <div className="font-['DM_Sans'] bg-white border border-[#e8e8e4] rounded-xl w-full max-w-[380px] overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.10)] animate-[sl-slide-up_0.2s_ease]">
       {/* Header */}
       <div className="px-7 pt-7 pb-5 border-b border-[#f0f0ec] flex items-center justify-between">
@@ -67,6 +84,7 @@ const SellerLogin: React.FC = () => {
           onClick={handleClose}
           className="w-[30px] h-[30px] rounded-md border border-[#e8e8e4] bg-transparent flex items-center justify-center cursor-pointer text-[#999] hover:bg-[#f2f2ef] hover:text-[#1a1a1a] transition-all flex-shrink-0"
           aria-label="Close"
+          type="button"
         >
           <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -76,7 +94,6 @@ const SellerLogin: React.FC = () => {
 
       {/* Form */}
       <form className="px-7 pt-6 pb-7 flex flex-col gap-4" onSubmit={handleSubmit}>
-        {/* Email Field */}
         <div className="flex flex-col gap-1.5">
           <label htmlFor="sl-email" className="font-['DM_Mono'] text-[10px] font-medium tracking-[0.1em] uppercase text-[#aaa]">
             Email
@@ -94,7 +111,6 @@ const SellerLogin: React.FC = () => {
           />
         </div>
 
-        {/* Password Field */}
         <div className="flex flex-col gap-1.5">
           <label htmlFor="sl-password" className="font-['DM_Mono'] text-[10px] font-medium tracking-[0.1em] uppercase text-[#aaa]">
             Password
@@ -113,9 +129,10 @@ const SellerLogin: React.FC = () => {
             />
             <button
               type="button"
-              onClick={() => setShowPassword(!showPassword)}
+              onClick={() => setShowPassword((prev) => !prev)}
               className="absolute right-3 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer text-[#bbb] p-0.5 flex transition-colors hover:text-[#666]"
               tabIndex={-1}
+              aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? (
                 <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24">
@@ -136,7 +153,6 @@ const SellerLogin: React.FC = () => {
           )}
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
           disabled={loading || !email || !password}
@@ -156,48 +172,26 @@ const SellerLogin: React.FC = () => {
       {/* Footer */}
       <div className="px-7 py-3.5 bg-[#fafaf8] border-t border-[#f0f0ec] text-center text-xs text-[#aaa]">
         Not a seller?{" "}
-        <a
-          href="/"
+        <button
           onClick={(e) => {
             e.preventDefault();
-            if (!isStandalonePage) {
-              setShowSellerLogin(false);
-            }
+            if (!isStandalonePage) setShowSellerLogin(false);
             navigate("/");
           }}
-          className="text-[#1a1a1a] font-medium no-underline border-b border-[#d0d0ca] hover:border-[#1a1a1a] transition-colors"
+          className="text-[#1a1a1a] font-medium no-underline border-b border-[#d0d0ca] hover:border-[#1a1a1a] transition-colors bg-transparent cursor-pointer"
         >
           Back to store
-        </a>
+        </button>
       </div>
     </div>
   );
-
-  // Add keyframes to your global CSS or use a style tag
-  const keyframesStyle = `
-    @keyframes sl-slide-up {
-      from {
-        opacity: 0;
-        transform: translateY(12px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    @keyframes sl-fade-in {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-  `;
 
   if (isStandalonePage) {
     return (
       <>
         <style>{keyframesStyle}</style>
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#667eea] to-[#764ba2] p-5">
-          <LoginCard />
+          {card}
         </div>
       </>
     );
@@ -208,11 +202,9 @@ const SellerLogin: React.FC = () => {
       <style>{keyframesStyle}</style>
       <div
         className="fixed inset-0 bg-black/35 flex items-center justify-center z-50 p-4 animate-[sl-fade-in_0.15s_ease]"
-        onClick={(e) => {
-          if (e.target === e.currentTarget) handleClose();
-        }}
+        onClick={(e) => { if (e.target === e.currentTarget) handleClose(); }}
       >
-        <LoginCard />
+        {card}
       </div>
     </>
   );

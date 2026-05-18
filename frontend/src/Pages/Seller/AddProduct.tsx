@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useRef, useCallback } from "react";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 import { useAppContext } from "../../context/AppContext";
 
 const CATEGORIES = [

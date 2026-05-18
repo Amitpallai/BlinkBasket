@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAppContext } from "../../context/AppContext";
-import toast from "react-hot-toast";
+import {toast} from "sonner";
 
 type Address = {
   firstName: string;

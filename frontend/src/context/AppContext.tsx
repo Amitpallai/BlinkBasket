@@ -15,21 +15,26 @@ axios.defaults.withCredentials = true;
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL || "https://grocery-mart-npj4.vercel.app";
 
 // ✅ FIXED INTERCEPTORS - FULL DUAL TOKEN SUPPORT (COOKIE + LOCALSTORAGE + HEADERS)
+// ✅ FIXED INTERCEPTOR - cleaner priority, no conflicts
 axios.interceptors.request.use(
   (config) => {
-    // PRIORITY: 1. sellerToken cookie, 2. seller_token localStorage, 3. token localStorage
-    const sellerTokenCookie = document.cookie
-      .split('; ')
-      .find(row => row.startsWith('sellerToken='))
-      ?.split('=')[1];
-    
-    let token = sellerTokenCookie || 
-                localStorage.getItem("seller_token") || 
-                localStorage.getItem("token");
-    
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    // Check if this is a seller endpoint
+    const isSellerEndpoint = config.url?.includes("/api/seller");
+
+    if (isSellerEndpoint) {
+      // Only use seller token for seller endpoints
+      const sellerTokenCookie = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('sellerToken='))
+        ?.split('=')[1];
+      const sellerToken = sellerTokenCookie || localStorage.getItem("seller_token");
+      if (sellerToken) config.headers.Authorization = `Bearer ${sellerToken}`;
+    } else {
+      // Only use user token for user/product endpoints
+      const userToken = localStorage.getItem("token");
+      if (userToken) config.headers.Authorization = `Bearer ${userToken}`;
     }
+
     return config;
   },
   (error) => Promise.reject(error)
@@ -213,9 +218,15 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const refreshAppData = useCallback(async () => {
+const refreshAppData = useCallback(async () => {
+  // Don't refresh if currently on seller pages — it can reset isSeller mid-session
+  const isSellerPage = window.location.pathname.startsWith("/seller");
+  if (isSellerPage) {
+    await Promise.allSettled([fetchProducts()]);
+  } else {
     await Promise.allSettled([fetchUser(), fetchSeller(), fetchProducts()]);
-  }, [fetchProducts, fetchSeller, fetchUser]);
+  }
+}, [fetchProducts, fetchSeller, fetchUser]);
 
   // ✅ USER AUTH
   const login = useCallback(async (email: string, password: string) => {
@@ -261,40 +272,47 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   }, [navigate]);
 
   // ✅ SELLER AUTH - FIXED TOKEN HANDLING WITH BETTER ERROR HANDLING
-  const sellerLogin = useCallback(async (email: string, password: string) => {
-    try {
-      // Clear any existing tokens before login attempt
-      localStorage.removeItem("token");
-      localStorage.removeItem("seller_token");
-      
-      const { data } = await axios.post("/api/seller/login", { email, password });
-      if (data.success) {
-        setSeller(data.seller);
-        setIsSeller(true);
-        if (data.token) {
-          localStorage.setItem("seller_token", data.token);
-          // Also set cookie for interceptor
-          document.cookie = `sellerToken=${data.token}; path=/; SameSite=strict`;
-        }
-        sessionStorage.removeItem("auth_expired");
-        toast.success("Seller login successful!");
-        setShowSellerLogin(false);
-        navigate("/seller");
-      } else {
-        toast.error(data.message || "Login failed");
+// ✅ FIXED SELLER LOGIN
+const sellerLogin = useCallback(async (email: string, password: string) => {
+  try {
+    // Don't clear tokens before — the interceptor will send whatever exists
+    // which is fine since backend validates credentials anyway
+    const { data } = await axios.post("/api/seller/login", { email, password });
+
+    if (data.success) {
+      // 1. Store token FIRST before any state updates
+      if (data.token) {
+        localStorage.setItem("seller_token", data.token);
+        document.cookie = `sellerToken=${data.token}; path=/; SameSite=strict; Max-Age=86400`;
       }
-    } catch (error: any) {
-      console.error("Seller login error:", error);
-      const errorMessage = error.response?.data?.message || 
-                          error.response?.data?.error || 
-                          "Seller login failed. Please check your credentials.";
-      toast.error(errorMessage);
-      
-      // Clear any partial auth state
-      localStorage.removeItem("seller_token");
-      document.cookie = "sellerToken=; Max-Age=0";
+
+      // 2. Clear user token to avoid conflict
+      localStorage.removeItem("token");
+      document.cookie = "token=; Max-Age=0; path=/";
+
+      // 3. Update state
+      setSeller(data.seller);
+      setIsSeller(true);
+      setUser(null); // clear any user session
+      sessionStorage.removeItem("auth_expired");
+
+      toast.success("Seller login successful!");
+      setShowSellerLogin(false);
+
+      // 4. Navigate last
+      navigate("/seller");
+    } else {
+      toast.error(data.message || "Login failed");
     }
-  }, [navigate]);
+  } catch (error: any) {
+    console.error("Seller login error:", error);
+    toast.error(
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      "Seller login failed. Please check your credentials."
+    );
+  }
+}, [navigate]);
 
   const sellerSignup = useCallback(async (cafeName: string, email: string, password: string) => {
     try {

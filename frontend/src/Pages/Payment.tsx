@@ -2,8 +2,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import toast from "react-hot-toast";
+import {toast} from "sonner";
 import { useAppContext } from "@/context/AppContext";
+
+// ── Custom Colors ──────────────────────────────────────
+const PRIMARY_GREEN = "#008235";
+const PRIMARY_GREEN_DARK = "#00662a";
+const PRIMARY_GREEN_LIGHT = "#e8f5ed";
 
 // ── Types ──────────────────────────────────────────────
 interface PaymentLocationState {
@@ -85,7 +90,7 @@ const UPI_APPS = [
 
 // ── Icons ──────────────────────────────────────────────
 const ShieldIcon = () => (
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5a8a54" strokeWidth="2">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={PRIMARY_GREEN} strokeWidth="2">
     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
     <polyline points="9 12 11 14 15 10" />
   </svg>
@@ -99,7 +104,7 @@ const CopyIcon = () => (
 );
 
 const CheckCircleIcon = () => (
-  <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#3b8a1a" strokeWidth="1.5">
+  <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke={PRIMARY_GREEN} strokeWidth="1.5">
     <circle cx="12" cy="12" r="10" />
     <polyline points="9 12 11 14 15 10" />
   </svg>
@@ -144,7 +149,7 @@ const ProcessingView = ({ amount, currency }: { amount: number; currency: string
           <circle
             cx="48" cy="48" r="40"
             fill="none"
-            stroke="#1a2e1a"
+            stroke={PRIMARY_GREEN}
             strokeWidth="6"
             strokeLinecap="round"
             strokeDasharray="251.2"
@@ -167,8 +172,8 @@ const ProcessingView = ({ amount, currency }: { amount: number; currency: string
         {[0, 1, 2].map((i) => (
           <div
             key={i}
-            className="w-2 h-2 rounded-full bg-[#1a2e1a] animate-bounce"
-            style={{ animationDelay: `${i * 0.15}s` }}
+            className="w-2 h-2 rounded-full animate-bounce"
+            style={{ backgroundColor: PRIMARY_GREEN, animationDelay: `${i * 0.15}s` }}
           />
         ))}
       </div>
@@ -189,7 +194,10 @@ const SuccessView = ({
   onContinue: () => void;
 }) => (
   <div className="flex flex-col items-center justify-center py-10 gap-5 text-center">
-    <div className="w-20 h-20 rounded-full bg-[#eaf7e0] border-2 border-[#b0d890] flex items-center justify-center">
+    <div 
+      className="w-20 h-20 rounded-full border-2 flex items-center justify-center"
+      style={{ backgroundColor: PRIMARY_GREEN_LIGHT, borderColor: "#b0d890" }}
+    >
       <CheckCircleIcon />
     </div>
     <div>
@@ -206,7 +214,10 @@ const SuccessView = ({
     </div>
     <button
       onClick={onContinue}
-      className="w-full max-w-xs bg-[#1a2e1a] text-[#d4eecc] py-3.5 rounded-[14px] text-[14px] font-semibold hover:bg-[#2a4a28] active:scale-[0.98] transition-all"
+      className="w-full max-w-xs text-white py-3.5 rounded-[14px] text-[14px] font-semibold transition-all active:scale-[0.98]"
+      style={{ backgroundColor: PRIMARY_GREEN }}
+      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = PRIMARY_GREEN_DARK}
+      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = PRIMARY_GREEN}
     >
       View order
     </button>
@@ -226,7 +237,8 @@ const QRTab = ({
   const MERCHANT_UPI = import.meta.env.VITE_MERCHANT_UPI || "FreshMert@ybl";
   const MERCHANT_NAME = "Fresh Mart";
   const upiString = `upi://pay?pa=${MERCHANT_UPI}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${amount}&cu=INR&tn=${encodeURIComponent("Order " + orderId)}`;
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&bgcolor=fffdf9&color=1a2e1a&data=${encodeURIComponent(upiString)}`;
+  // QR code with black color (#000000)
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&bgcolor=fffdf9&color=000000&data=${encodeURIComponent(upiString)}`;
 
   const [copied, setCopied] = useState(false);
 
@@ -241,7 +253,10 @@ const QRTab = ({
     <div className="flex flex-col items-center gap-5 py-2">
       {/* QR Frame */}
       <div className="relative">
-        <div className="w-[248px] h-[248px] bg-[#fffdf9] border-[2px] border-[#1a2e1a] rounded-[20px] overflow-hidden flex items-center justify-center p-3 shadow-[0_4px_24px_rgba(26,46,26,0.08)]">
+        <div 
+          className="w-[248px] h-[248px] bg-[#fffdf9] border-[2px] rounded-[20px] overflow-hidden flex items-center justify-center p-3 shadow-[0_4px_24px_rgba(26,46,26,0.08)]"
+          style={{ borderColor: PRIMARY_GREEN }}
+        >
           <img
             src={qrUrl}
             alt="UPI QR Code"
@@ -252,7 +267,7 @@ const QRTab = ({
             }}
           />
         </div>
-        {/* Corner dots */}
+        {/* Corner dots - changed to black */}
         {[
           "top-2 left-2",
           "top-2 right-2",
@@ -261,15 +276,22 @@ const QRTab = ({
         ].map((pos, i) => (
           <div
             key={i}
-            className={`absolute ${pos} w-5 h-5 rounded-[5px] bg-[#1a2e1a]`}
+            className={`absolute ${pos} w-5 h-5 rounded-[5px]`}
+            style={{ backgroundColor: "#000000" }}
           />
         ))}
       </div>
 
       {/* Amount badge */}
-      <div className="bg-[#eaf7e0] border border-[#b0d890] rounded-full px-4 py-1.5 flex items-center gap-2">
-        <div className="w-2 h-2 rounded-full bg-[#3b8a1a] animate-pulse" />
-        <span className="text-[13px] font-semibold text-[#27500a]">
+      <div 
+        className="border rounded-full px-4 py-1.5 flex items-center gap-2"
+        style={{ backgroundColor: PRIMARY_GREEN_LIGHT, borderColor: "#b0d890" }}
+      >
+        <div 
+          className="w-2 h-2 rounded-full animate-pulse"
+          style={{ backgroundColor: PRIMARY_GREEN }}
+        />
+        <span className="text-[13px] font-semibold" style={{ color: PRIMARY_GREEN }}>
           {currency}{amount.toLocaleString()} · Scan to pay
         </span>
       </div>
@@ -288,9 +310,21 @@ const QRTab = ({
           onClick={copyUpi}
           className={`flex items-center gap-1.5 text-[12px] font-medium px-3 py-1.5 rounded-[8px] transition-all ${
             copied
-              ? "bg-[#eaf7e0] text-[#3b8a1a] border border-[#b0d890]"
-              : "bg-[#fffdf9] text-[#5a8a54] border border-[#ede8df] hover:border-[#1a2e1a] hover:text-[#1a2e1a]"
+              ? "border"
+              : "border hover:bg-[#fffdf9]"
           }`}
+          style={copied ? { backgroundColor: PRIMARY_GREEN_LIGHT, color: PRIMARY_GREEN, borderColor: "#b0d890" } : { backgroundColor: "#fffdf9", color: PRIMARY_GREEN, borderColor: "#ede8df" }}
+          onMouseEnter={(e) => {
+            if (!copied) {
+              e.currentTarget.style.borderColor = PRIMARY_GREEN;
+              e.currentTarget.style.backgroundColor = "#fffdf9";
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!copied) {
+              e.currentTarget.style.borderColor = "#ede8df";
+            }
+          }}
         >
           {copied ? (
             <>
@@ -365,6 +399,7 @@ const UpiIdTab: React.FC<UpiIdTabProps> = ({ amount, currency, onPay }) => {
                   ? "border-[#1a2e1a] bg-[#f0f7ec] scale-[0.97]"
                   : "border-[#ede8df] bg-[#fffdf9] hover:border-[#c8dfc8] hover:bg-[#f5f9f4]"
               }`}
+              style={selectedApp === app.name ? { borderColor: PRIMARY_GREEN } : {}}
             >
               <div className="w-9 h-9 rounded-[10px] flex items-center justify-center" style={{ background: app.bg }}>
                 {app.icon}
@@ -393,8 +428,15 @@ const UpiIdTab: React.FC<UpiIdTabProps> = ({ amount, currency, onPay }) => {
             onKeyDown={(e) => e.key === "Enter" && handlePay()}
             placeholder="yourname@ybl"
             className={`w-full h-12 border-[1.5px] ${
-              error ? "border-[#c05050]" : "border-[#ede8df] focus:border-[#1a2e1a]"
+              error ? "border-[#c05050]" : "focus:border-[#1a2e1a]"
             } rounded-[12px] px-4 pr-12 text-[13px] text-[#1a2e1a] bg-[#fffdf9] placeholder-[#c8bfaa] outline-none transition-colors font-mono tracking-wide`}
+            style={!error ? { borderColor: "#ede8df" } : {}}
+            onFocus={(e) => {
+              if (!error) e.currentTarget.style.borderColor = PRIMARY_GREEN;
+            }}
+            onBlur={(e) => {
+              if (!error) e.currentTarget.style.borderColor = "#ede8df";
+            }}
           />
           <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[11px] text-[#a0966e]">
             UPI
@@ -412,7 +454,10 @@ const UpiIdTab: React.FC<UpiIdTabProps> = ({ amount, currency, onPay }) => {
       <button
         onClick={handlePay}
         disabled={!upiId.trim()}
-        className="w-full flex items-center justify-center gap-2 bg-[#1a2e1a] text-[#d4eecc] py-3.5 rounded-[14px] text-[14px] font-semibold hover:bg-[#2a4a28] active:scale-[0.98] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+        className="w-full flex items-center justify-center gap-2 text-white py-3.5 rounded-[14px] text-[14px] font-semibold transition-all active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
+        style={{ backgroundColor: PRIMARY_GREEN }}
+        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = PRIMARY_GREEN_DARK}
+        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = PRIMARY_GREEN}
       >
         Pay {currency}{amount.toLocaleString()}
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -526,6 +571,8 @@ const Payment: React.FC = () => {
           <button
             onClick={() => navigate("/cart")}
             className="flex items-center gap-1.5 text-[13px] text-[#7a6e58] hover:text-[#1a2e1a] font-medium mb-4 transition-colors"
+            onMouseEnter={(e) => e.currentTarget.style.color = PRIMARY_GREEN}
+            onMouseLeave={(e) => e.currentTarget.style.color = "#7a6e58"}
           >
             <ArrowLeft /> Back to cart
           </button>
@@ -551,7 +598,10 @@ const Payment: React.FC = () => {
               </div>
               {/* Amount pill */}
               {step === "select" && (
-                <div className="bg-[#1a2e1a] text-[#c4e8b4] rounded-[10px] px-3.5 py-2 text-right">
+                <div 
+                  className="text-white rounded-[10px] px-3.5 py-2 text-right"
+                  style={{ backgroundColor: PRIMARY_GREEN }}
+                >
                   <p className="text-[10px] tracking-wider opacity-70">PAY</p>
                   <p className="text-[16px] font-semibold leading-none mt-0.5">
                     {currency}{amount.toLocaleString()}
@@ -593,6 +643,7 @@ const Payment: React.FC = () => {
                           ? "bg-[#fffdf9] text-[#1a2e1a] shadow-sm border border-[#ede8df]"
                           : "text-[#7a6e58] hover:text-[#1a2e1a]"
                       }`}
+                      style={tab === key ? { borderColor: PRIMARY_GREEN } : {}}
                     >
                       <Icon />
                       {label}
@@ -617,7 +668,10 @@ const Payment: React.FC = () => {
                     {/* "I've paid" button */}
                     <button
                       onClick={handleQrPaid}
-                      className="w-full mt-4 bg-[#1a2e1a] text-[#d4eecc] py-3.5 rounded-[14px] text-[14px] font-semibold hover:bg-[#2a4a28] active:scale-[0.98] transition-all"
+                      className="w-full mt-4 text-white py-3.5 rounded-[14px] text-[14px] font-semibold transition-all active:scale-[0.98]"
+                      style={{ backgroundColor: PRIMARY_GREEN }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = PRIMARY_GREEN_DARK}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = PRIMARY_GREEN}
                     >
                       I've completed payment
                     </button>

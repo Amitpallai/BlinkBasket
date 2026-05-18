@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext";
 import axios from "axios";
-import toast from "react-hot-toast";
+import {toast} from "sonner";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();

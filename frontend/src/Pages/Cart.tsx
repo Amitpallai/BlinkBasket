@@ -1,7 +1,7 @@
 // Cart.tsx
 import React, { useEffect, useRef, useState } from "react";
 import { useAppContext } from "@/context/AppContext";
-import toast from "react-hot-toast";
+import {toast} from "sonner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -35,6 +35,11 @@ const COUPONS: Record<string, { pct: number; label: string }> = {
 };
 const COUPON_CHIPS = Object.keys(COUPONS);
 
+// Custom color
+const PRIMARY_GREEN = "#008235";
+const PRIMARY_GREEN_DARK = "#00662a";
+const PRIMARY_GREEN_LIGHT = "#e8f5ed";
+
 // ── Icons ──────────────────────────────────────────────
 const ArrowRight = () => (
   <svg
@@ -54,14 +59,14 @@ const EditIcon = () => (
     height="10"
     viewBox="0 0 24 24"
     fill="none"
-    stroke="#5a8a54"
+    stroke={PRIMARY_GREEN}
     strokeWidth="2.5"
   >
     <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
     <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
   </svg>
 );
-const CheckIcon = ({ color = "#3b6d11" }: { color?: string }) => (
+const CheckIcon = ({ color = PRIMARY_GREEN }: { color?: string }) => (
   <svg
     width="12"
     height="12"
@@ -92,7 +97,7 @@ const TagIcon = () => (
     height="13"
     viewBox="0 0 24 24"
     fill="none"
-    stroke="#5a8a54"
+    stroke={PRIMARY_GREEN}
     strokeWidth="2"
   >
     <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" />
@@ -125,7 +130,10 @@ const EmptyCart = ({ onShop }: { onShop: () => void }) => (
     </p>
     <button
       onClick={onShop}
-      className="flex items-center gap-2 bg-green-700 text-[#d4eecc] px-6 py-3 rounded-[14px] text-sm font-medium hover:bg-green-800 transition-colors"
+      className="flex items-center gap-2 px-6 py-3 rounded-[14px] text-sm font-medium transition-colors"
+      style={{ backgroundColor: PRIMARY_GREEN, color: "#d4eecc" }}
+      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = PRIMARY_GREEN_DARK}
+      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = PRIMARY_GREEN}
     >
       Continue shopping <ArrowRight />
     </button>
@@ -140,7 +148,6 @@ interface CouponSectionProps {
   onCouponRemoved: () => void;
 }
 const CouponSection: React.FC<CouponSectionProps> = ({
-  currency,
   subtotalAfterDiscount,
   onCouponApplied,
   onCouponRemoved,
@@ -223,7 +230,10 @@ const CouponSection: React.FC<CouponSectionProps> = ({
             <button
               onClick={apply}
               disabled={!input.trim()}
-              className="h-11 px-5 bg-[#1a2e1a] text-[#c4e8b4] text-[13px] font-semibold rounded-[12px] hover:bg-[#2a4a28] active:scale-[0.97] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+              className="h-11 px-5 text-[13px] font-semibold rounded-[12px] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+              style={{ backgroundColor: PRIMARY_GREEN, color: "#c4e8b4" }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = PRIMARY_GREEN_DARK}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = PRIMARY_GREEN}
             >
               Apply
             </button>
@@ -239,7 +249,9 @@ const CouponSection: React.FC<CouponSectionProps> = ({
                   setInput(chip);
                   setError("");
                 }}
-                className="bg-[#f5f0e8] border border-[#ded6c8] rounded-[8px] px-2.5 py-1 text-[11px] font-semibold text-[#4a3e2a] tracking-wider hover:bg-[#fffdf9] hover:border-[#1a2e1a] hover:text-[#1a2e1a] transition-all"
+                className="bg-[#f5f0e8] border border-[#ded6c8] rounded-[8px] px-2.5 py-1 text-[11px] font-semibold text-[#4a3e2a] tracking-wider hover:border-[#1a2e1a] hover:text-[#1a2e1a] transition-all"
+                onMouseEnter={(e) => e.currentTarget.style.borderColor = PRIMARY_GREEN}
+                onMouseLeave={(e) => e.currentTarget.style.borderColor = "#ded6c8"}
               >
                 {chip}
               </button>
@@ -321,107 +333,10 @@ const Cart: React.FC = () => {
     }
   };
 
-  // ✅ Cart.tsx → placeOrder function
-// Send finalTotal as amount to backend
-
-// ─────────────────────────────────────────────────────────────
-// REPLACE your existing `placeOrder` function in Cart.tsx with:
-// ─────────────────────────────────────────────────────────────
-
-const placeOrder = async () => {
-  if (!selectedAddress) {
-    return toast.error("Please select a delivery address");
-  }
-
-  setLoading(true);
-
-  try {
-    // ── ONLINE: create pending order → navigate to /payment ──
-    if (paymentOption === "Online") {
-      const { data } = await axios.post("/api/payment/initiate", {
-        items: cartArray.map((i) => ({
-          product: i._id,
-          quantity: i.quantity,
-        })),
-        address: selectedAddress._id,
-        amount: finalTotal,
-        coupon: couponCode || undefined,
-      });
-
-      if (data.success) {
-        navigate("/payment", {
-          state: {
-            orderId: data.orderId,
-            amount: finalTotal,
-            currency,
-            deliveryAddress: `${selectedAddress.firstName} ${selectedAddress.lastName}, ${selectedAddress.street}, ${selectedAddress.city}`,
-            savedAmount: totalSaving,
-          },
-        });
-      } else {
-        toast.error(data.message || "Could not create order");
-      }
-      return;
-    }
-
-    // ── COD: place order directly ──
-    const { data } = await axios.post("/api/order/cod", {
-      items: cartArray.map((i) => ({
-        product: i._id,
-        quantity: i.quantity,
-      })),
-      address: selectedAddress._id,
-      paymentMethod: "COD",
-      coupon: couponCode || undefined,
-      amount: finalTotal,
-    });
-
-    if (data.success) {
-      await clearCart();
-      toast.success("Order placed!");
-      navigate("/confirmation", {
-        state: {
-          orderId:
-            data.order?._id ||
-            `BLN-${Math.floor(Math.random() * 90000) + 10000}`,
-          total: finalTotal,
-          currency,
-          paymentMethod: "Cash on delivery",
-          deliveryAddress: `${selectedAddress.firstName} ${selectedAddress.lastName}, ${selectedAddress.street}, ${selectedAddress.city}`,
-          savedAmount: totalSaving,
-        },
-      });
-    }
-  } catch (error: any) {
-    toast.error(
-      error?.response?.data?.message || "Order failed. Please try again."
-    );
-  } finally {
-    setLoading(false);
-  }
-};
-
-
-// ─────────────────────────────────────────────────────────────
-// ALSO add /payment route in your App.tsx / router:
-// ─────────────────────────────────────────────────────────────
-//
-//   import Payment from "./pages/Payment";
-//
-//   <Route path="/payment" element={<Payment />} />
-//
-// ─────────────────────────────────────────────────────────────
-// ALSO register payment routes in server/app.ts (or server.ts):
-// ─────────────────────────────────────────────────────────────
-//
-//   import paymentRoutes from "./routes/paymentRoutes";
-//   app.use("/api/payment", paymentRoutes);
-//
-// ─────────────────────────────────────────────────────────────
-
   useEffect(() => {
     if (products.length) getCart();
   }, [products, cartItems]);
+  
   useEffect(() => {
     if (user) fetchAddress();
   }, [user]);
@@ -432,6 +347,78 @@ const placeOrder = async () => {
   const afterOffer = subtotal - offerDiscount;
   const totalSaving = offerDiscount + couponSaving;
   const finalTotal = afterOffer - couponSaving;
+
+  // ── Place Order Function (FIXED - moved after calculations) ──
+  const placeOrder = async () => {
+    if (!selectedAddress) {
+      return toast.error("Please select a delivery address");
+    }
+
+    setLoading(true);
+
+    try {
+      // ── ONLINE: create pending order → navigate to /payment ──
+      if (paymentOption === "Online") {
+        const { data } = await axios.post("/api/payment/initiate", {
+          items: cartArray.map((i) => ({
+            product: i._id,
+            quantity: i.quantity,
+          })),
+          address: selectedAddress._id,
+          amount: finalTotal,
+          coupon: couponCode || undefined,
+        });
+
+        if (data.success) {
+          navigate("/payment", {
+            state: {
+              orderId: data.orderId,
+              amount: finalTotal,
+              currency,
+              deliveryAddress: `${selectedAddress.firstName} ${selectedAddress.lastName}, ${selectedAddress.street}, ${selectedAddress.city}`,
+              savedAmount: totalSaving,
+            },
+          });
+        } else {
+          toast.error(data.message || "Could not create order");
+        }
+        return;
+      }
+
+      // ── COD: place order directly ──
+      const { data } = await axios.post("/api/order/cod", {
+        items: cartArray.map((i) => ({
+          product: i._id,
+          quantity: i.quantity,
+        })),
+        address: selectedAddress._id,
+        paymentMethod: "COD",
+        coupon: couponCode || undefined,
+        amount: finalTotal,
+      });
+
+      if (data.success) {
+        await clearCart();
+        toast.success("Order placed!");
+        navigate("/confirmation", {
+          state: {
+            orderId: data.order?._id || `BLN-${Math.floor(Math.random() * 90000) + 10000}`,
+            total: finalTotal,
+            currency,
+            paymentMethod: "Cash on delivery",
+            deliveryAddress: `${selectedAddress.firstName} ${selectedAddress.lastName}, ${selectedAddress.street}, ${selectedAddress.city}`,
+            savedAmount: totalSaving,
+          },
+        });
+      }
+    } catch (error: any) {
+      toast.error(
+        error?.response?.data?.message || "Order failed. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (cartArray.length === 0)
     return <EmptyCart onShop={() => navigate("/products")} />;
@@ -445,7 +432,10 @@ const placeOrder = async () => {
             <h1 className="text-base font-semibold text-[#1a2e1a]">
               Your cart
             </h1>
-            <span className="bg-[#1a2e1a] text-[#c4e8b4] text-[11px] font-semibold px-3 py-1 rounded-full">
+            <span 
+              className="text-[#c4e8b4] text-[11px] font-semibold px-3 py-1 rounded-full"
+              style={{ backgroundColor: PRIMARY_GREEN }}
+            >
               {itemCount} {itemCount === 1 ? "item" : "items"}
             </span>
           </div>
@@ -479,7 +469,7 @@ const placeOrder = async () => {
                   {product.offerPrice.toLocaleString()} / unit
                 </p>
                 <div className="flex items-center gap-3 mt-2">
-                  <div className="flex items-center border border-[#1a2e1a] rounded-[10px] overflow-hidden h-8">
+                  <div className="flex items-center border rounded-[10px] overflow-hidden h-8" style={{ borderColor: PRIMARY_GREEN }}>
                     <button
                       onClick={() => removeCart(product._id)}
                       className="w-8 h-8 flex items-center justify-center bg-[#f5f0e8] text-[#1a2e1a] text-base hover:bg-[#ede8da] transition-colors flex-shrink-0"
@@ -493,7 +483,10 @@ const placeOrder = async () => {
                       onClick={() =>
                         updateCart(product._id, product.quantity + 1)
                       }
-                      className="w-8 h-8 flex items-center justify-center bg-[#1a2e1a] text-[#c4e8b4] text-base hover:bg-[#2a4a28] transition-colors flex-shrink-0"
+                      className="w-8 h-8 flex items-center justify-center text-[#c4e8b4] text-base transition-colors flex-shrink-0"
+                      style={{ backgroundColor: PRIMARY_GREEN }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = PRIMARY_GREEN_DARK}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = PRIMARY_GREEN}
                     >
                       +
                     </button>
@@ -553,7 +546,10 @@ const placeOrder = async () => {
                   </p>
                   <button
                     onClick={() => navigate("/add-address")}
-                    className="flex items-center gap-1.5 text-[11px] text-[#5a8a54] font-medium mt-2.5 hover:text-[#3b6d11] transition-colors"
+                    className="flex items-center gap-1.5 text-[11px] font-medium mt-2.5 transition-colors"
+                    style={{ color: PRIMARY_GREEN }}
+                    onMouseEnter={(e) => e.currentTarget.style.color = PRIMARY_GREEN_DARK}
+                    onMouseLeave={(e) => e.currentTarget.style.color = PRIMARY_GREEN}
                   >
                     <EditIcon /> Change address
                   </button>
@@ -567,7 +563,10 @@ const placeOrder = async () => {
                   )}
                   <button
                     onClick={() => navigate("/add-address")}
-                    className="text-[13px] text-[#5a8a54] font-medium hover:text-[#3b6d11] transition-colors"
+                    className="text-[13px] font-medium transition-colors"
+                    style={{ color: PRIMARY_GREEN }}
+                    onMouseEnter={(e) => e.currentTarget.style.color = PRIMARY_GREEN_DARK}
+                    onMouseLeave={(e) => e.currentTarget.style.color = PRIMARY_GREEN}
                   >
                     + Add delivery address
                   </button>
@@ -601,9 +600,10 @@ const placeOrder = async () => {
                     onClick={() => setPaymentOption(opt)}
                     className={`flex-1 py-2.5 rounded-[12px] text-[12px] font-medium transition-all border-[1.5px] ${
                       paymentOption === opt
-                        ? "bg-[#1a2e1a] text-[#c4e8b4] border-[#1a2e1a]"
+                        ? "text-[#c4e8b4] border-[#1a2e1a]"
                         : "bg-[#fffdf9] text-[#4a3e2a] border-[#ede8df] hover:border-[#c8dfc8] hover:bg-[#f5f9f4]"
                     }`}
+                    style={paymentOption === opt ? { backgroundColor: PRIMARY_GREEN } : {}}
                   >
                     {opt === "COD" ? "Cash on delivery" : "Pay online"}
                   </button>
@@ -624,7 +624,10 @@ const placeOrder = async () => {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-[13px] text-[#7a6e58]">Delivery</span>
-                <span className="bg-[#eaf7e0] text-[#3b6d11] text-[10px] font-semibold px-2.5 py-0.5 rounded-full border border-[#b0d890]">
+                <span 
+                  className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full border"
+                  style={{ color: PRIMARY_GREEN, backgroundColor: PRIMARY_GREEN_LIGHT, borderColor: "#b0d890" }}
+                >
                   Free
                 </span>
               </div>
@@ -632,7 +635,7 @@ const placeOrder = async () => {
                 <span className="text-[13px] text-[#7a6e58]">
                   Offer discount (20%)
                 </span>
-                <span className="text-[13px] font-medium text-[#3b6d11]">
+                <span className="text-[13px] font-medium" style={{ color: PRIMARY_GREEN }}>
                   −{currency}
                   {offerDiscount.toLocaleString()}
                 </span>
@@ -642,7 +645,7 @@ const placeOrder = async () => {
                   <span className="text-[13px] text-[#7a6e58]">
                     Coupon ({couponCode})
                   </span>
-                  <span className="text-[13px] font-medium text-[#3b6d11]">
+                  <span className="text-[13px] font-medium" style={{ color: PRIMARY_GREEN }}>
                     −{currency}
                     {couponSaving.toLocaleString()}
                   </span>
@@ -662,7 +665,7 @@ const placeOrder = async () => {
                     {afterOffer.toLocaleString()}
                   </span>
                 )}
-                <span className="text-[22px] font-semibold text-[#1a2e1a]">
+                <span className="text-[22px] font-semibold" style={{ color: PRIMARY_GREEN }}>
                   {currency}
                   {finalTotal.toLocaleString()}
                 </span>
@@ -673,7 +676,10 @@ const placeOrder = async () => {
             <button
               onClick={placeOrder}
               disabled={loading || !selectedAddress}
-              className="w-full flex items-center justify-center gap-2 bg-[#1a2e1a] text-[#d4eecc] py-4 rounded-[14px] text-[14px] font-semibold hover:bg-[#2a4a28] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center gap-2 text-[#d4eecc] py-4 rounded-[14px] text-[14px] font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ backgroundColor: PRIMARY_GREEN }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = PRIMARY_GREEN_DARK}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = PRIMARY_GREEN}
             >
               {loading ? (
                 <span className="flex items-center gap-2">

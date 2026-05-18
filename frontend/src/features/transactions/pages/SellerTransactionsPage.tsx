@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import TransactionsTable from "../components/TransactionsTable";
 import { fetchSellerTransactions } from "../api";
 import type { Transaction } from "../types";

@@ -1,16 +1,11 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
-// ── Types ──────────────────────────────────────────────
-interface OrderConfirmationProps {
-  orderId?: string;
-  total?: number;
-  currency?: string;
-  paymentMethod?: string;
-  deliveryAddress?: string;
-  savedAmount?: number;
-  estimatedTime?: string;
-}
+// ── Custom Colors ──────────────────────────────────────
+const PRIMARY_GREEN = "#008235";
+const PRIMARY_GREEN_DARK = "#00662a";
+const PRIMARY_GREEN_LIGHT = "#e8f5ed";
+
 
 // ── Timeline step data ─────────────────────────────────
 const STEPS = [
@@ -108,16 +103,16 @@ const OrderConfirmation: React.FC = () => {
       `}</style>
 
       <div className="min-h-screen bg-[#f5f0e8] flex items-center justify-center px-4 py-16">
-        <div className="oc-card bg-[#fffdf9] rounded-[24px] border border-[#ede8df] w-full max-w-[440px] px-9 pt-10 pb-9 shadow-lg">
+        <div className="oc-card bg-[#fffdf9] rounded-[24px] border w-full max-w-[440px] px-9 pt-10 pb-9 shadow-lg" style={{ borderColor: "#ede8df" }}>
 
           {/* Confetti dots */}
           <div className="oc-r1 flex justify-center gap-2 mb-6">
             {[
-              { bg: "#c4e8b4", r: "2px",  rot: "15deg"  },
+              { bg: PRIMARY_GREEN_LIGHT, r: "2px",  rot: "15deg"  },
               { bg: "#ffd54f", r: "50%",  rot: "-20deg" },
               { bg: "#f48fb1", r: "2px",  rot: "30deg"  },
               { bg: "#90caf9", r: "50%",  rot: "-10deg" },
-              { bg: "#c4e8b4", r: "2px",  rot: "25deg"  },
+              { bg: PRIMARY_GREEN_LIGHT, r: "2px",  rot: "25deg"  },
               { bg: "#ffb74d", r: "2px",  rot: "-15deg" },
               { bg: "#b0d890", r: "50%",  rot: "5deg"   },
             ].map((c, i) => (
@@ -131,14 +126,14 @@ const OrderConfirmation: React.FC = () => {
 
           {/* Check icon */}
           <div className="flex justify-center mb-6">
-            <div className="oc-float relative w-20 h-20 rounded-full bg-[#eaf7e0] border-2 border-[#b0d890] flex items-center justify-center">
-              <div className="oc-burst absolute inset-[-8px] rounded-full border-2 border-[#b0d890]" />
+            <div className="oc-float relative w-20 h-20 rounded-full border-2 flex items-center justify-center" style={{ backgroundColor: PRIMARY_GREEN_LIGHT, borderColor: "#b0d890" }}>
+              <div className="oc-burst absolute inset-[-8px] rounded-full border-2" style={{ borderColor: "#b0d890" }} />
               <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                <circle cx="20" cy="20" r="19" fill="#eaf7e0" stroke="#b0d890" strokeWidth="1.5" />
+                <circle cx="20" cy="20" r="19" fill={PRIMARY_GREEN_LIGHT} stroke="#b0d890" strokeWidth="1.5" />
                 <path
                   className="oc-check"
                   d="M11 20l7 7 11-13"
-                  stroke="#1a2e1a"
+                  stroke={PRIMARY_GREEN}
                   strokeWidth="2.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -164,16 +159,20 @@ const OrderConfirmation: React.FC = () => {
             {/* track line */}
             <div className="absolute top-4 left-[10%] right-[10%] h-px bg-[#e0d8cc]" />
             {/* progress line */}
-            <div className="absolute top-4 left-[10%] w-[16%] h-px bg-[#1a2e1a]" />
+            <div className="absolute top-4 left-[10%] w-[16%] h-px" style={{ backgroundColor: PRIMARY_GREEN }} />
 
             {STEPS.map((step, i) => (
               <div key={i} className="relative z-10 flex flex-col items-center gap-1.5 flex-1">
                 <div className={`
                   w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-semibold flex-shrink-0
-                  ${step.status === "done"    ? "bg-[#1a2e1a] text-[#c4e8b4]" : ""}
-                  ${step.status === "active"  ? "bg-[#eaf7e0] border-2 border-[#1a2e1a] text-[#1a2e1a]" : ""}
+                  ${step.status === "done" ? "text-[#c4e8b4]" : ""}
+                  ${step.status === "active" ? "border-2" : ""}
                   ${step.status === "pending" ? "bg-[#f5f0e8] border-2 border-[#ded6c8] text-[#b8aa90]" : ""}
-                `}>
+                `}
+                style={{
+                  backgroundColor: step.status === "done" ? PRIMARY_GREEN : step.status === "active" ? PRIMARY_GREEN_LIGHT : "",
+                  borderColor: step.status === "active" ? PRIMARY_GREEN : ""
+                }}>
                   {STEP_ICONS[i]}
                 </div>
                 <div className="text-center">
@@ -199,7 +198,7 @@ const OrderConfirmation: React.FC = () => {
               <div key={i} className="flex justify-between items-center">
                 <span className="text-[12px] text-[#7a6e58]">{row.label}</span>
                 {row.highlight ? (
-                  <span className="text-[11px] font-semibold text-[#27500a] bg-[#eaf7e0] border border-[#b0d890] px-2.5 py-0.5 rounded-full">
+                  <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full" style={{ color: PRIMARY_GREEN, backgroundColor: PRIMARY_GREEN_LIGHT, border: `1px solid #b0d890` }}>
                     {row.value}
                   </span>
                 ) : (
@@ -213,13 +212,24 @@ const OrderConfirmation: React.FC = () => {
           <div className="oc-r6 flex gap-2.5">
             <Link
               to="/my-orders"
-              className="flex-1 h-11 flex items-center justify-center gap-1.5 bg-[#f5f0e8] text-[#4a3e2a] border border-[#ded6c8] rounded-[12px] text-[13px] font-semibold hover:bg-[#ede8da] hover:border-[#c8bfaa] transition-all active:scale-[0.97]"
+              className="flex-1 h-11 flex items-center justify-center gap-1.5 bg-[#f5f0e8] text-[#4a3e2a] border border-[#ded6c8] rounded-[12px] text-[13px] font-semibold transition-all active:scale-[0.97]"
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "#ede8da";
+                e.currentTarget.style.borderColor = "#c8bfaa";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "#f5f0e8";
+                e.currentTarget.style.borderColor = "#ded6c8";
+              }}
             >
               <OrderIcon /> View order
             </Link>
             <Link
               to="/products"
-              className="flex-1 h-11 flex items-center justify-center gap-1.5 bg-[#1a2e1a] text-[#d4eecc] rounded-[12px] text-[13px] font-semibold hover:bg-[#2a4a28] transition-all active:scale-[0.97]"
+              className="flex-1 h-11 flex items-center justify-center gap-1.5 text-[#d4eecc] rounded-[12px] text-[13px] font-semibold transition-all active:scale-[0.97]"
+              style={{ backgroundColor: PRIMARY_GREEN }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = PRIMARY_GREEN_DARK}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = PRIMARY_GREEN}
             >
               <CartIcon /> Shop more
             </Link>

@@ -276,7 +276,7 @@ GET    /api/transaction/seller     - Get seller transactions
 - `axios` - HTTP client
 - `tailwindcss` - Utility-first CSS
 - `shadcn/ui` - Component library
-- `react-hot-toast` - Notifications
+- `sonner` - Notifications
 - `vite` - Build tool
 
 ---
