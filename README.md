@@ -1,6 +1,6 @@
+# Grocery-Mart
 
-
-A full-stack e-commerce web application for seamless online Fresh shopping. The platform provides a modern, intuitive interface for customers to browse products, manage carts, and place orders, while offering a robust dashboard for sellers to manage inventory and fulfill orders.
+A full-stack e-commerce web application for seamless online fresh shopping. The platform provides a modern, intuitive interface for customers to browse products, manage carts, and place orders, while offering a robust dashboard for sellers to manage inventory and fulfill orders.
 
 **Live Demo:** [Coming Soon]
 
@@ -39,14 +39,14 @@ A full-stack e-commerce web application for seamless online Fresh shopping. The 
 | **File Uploads** | Multer, Cloudinary API |
 | **Payments** | UPI Integration |
 | **UI Components** | Shadcn/ui, React Hot Toast |
-| **Deployment** | Vercel (Frontend & Backend) |
+| **Deployment** | Docker, Vercel |
 
 ---
 
 ## 📁 Project Structure
 
 ```
-Fresh-Mart/
+Grocery-Mart/
 ├── backend/
 │   ├── src/
 │   │   ├── config/          # Configuration files (CORS, environment, services)
@@ -82,13 +82,14 @@ Fresh-Mart/
 │   ├── public/              # Static files
 │   ├── package.json
 │   ├── tsconfig.json
-│   ├── tailwind.config.js
-│   ├── vite.config.js
+│   ├── Dockerfile
+│   ├── nginx.conf
+│   ├── .dockerignore
 │   ├── .env.example
 │   └── .env
 │
-├── README.md
-└── .gitignore
+├── docker-compose.yml
+└── README.md
 ```
 
 ---
@@ -175,6 +176,29 @@ Fresh-Mart/
    npm run dev
    ```
    Application runs on `http://localhost:5173`
+
+---
+
+## 🐳 Docker Setup
+
+### Run with Docker Compose
+
+1. Make sure Docker Desktop is running.
+2. Build and start both services:
+   ```bash
+   docker compose up --build
+   ```
+3. Open the app in your browser:
+   - Frontend: `http://localhost:5173`
+   - Backend API: `http://localhost:4000`
+
+### Stop containers
+
+```bash
+docker compose down
+```
+
+> Backend uses `backend/.env` for runtime secrets. Copy `backend/.env.example` and fill in your MongoDB and Cloudinary values before running Docker.
 
 ---
 
