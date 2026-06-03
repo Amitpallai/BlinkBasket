@@ -125,7 +125,7 @@ Grocery-Mart/
    NODE_ENV=development
 
    # Database
-   MONGODB_URL=mongodb+srv://username:password@cluster.mongodb.net/Freshmart
+   MONGODB_URL=mongodb+srv://username:password@cluster.mongodb.net/BlinkBasket
 
    # JWT
    JWT_SECRET=your_secure_jwt_secret_key

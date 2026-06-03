@@ -87,7 +87,7 @@ const Footer: React.FC = () => {
           <div className="bl-grid">
             <div className="bl-brand">
               <h2 className="bl-title">
-                Fresh<em>Mart</em>
+                Blink<em>Basket</em>
                 <span className="bl-tm">™</span>
               </h2>
               <p className="bl-tagline">
@@ -168,7 +168,7 @@ const Footer: React.FC = () => {
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                   <polyline points="22,6 12,13 2,6" />
                 </svg>
-                <span className="bl-contact-text">freshmart@gmail.in</span>
+                <span className="bl-contact-text">BlinkBasket@gmail.in</span>
               </div>
             </div>
           </div>

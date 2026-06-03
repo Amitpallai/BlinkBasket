@@ -104,7 +104,7 @@ const Navbar: React.FC = () => {
             aria-label="Go home"
           >
             <span className="h-2 w-2 rounded-full bg-white/90 transition-transform group-hover:scale-125" />
-            <span className="hidden xs:block">FreshMart</span>
+            <span className="hidden xs:block">BlinkBasket</span>
           </button>
 
           {/* Desktop Nav */}

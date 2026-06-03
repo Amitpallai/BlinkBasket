@@ -49,7 +49,7 @@ const Login: React.FC = () => {
       <div className="hidden lg:flex lg:flex-[0_0_420px] bg-[#1A2B1A] p-12 flex-col justify-center relative overflow-hidden">
         <div className="flex flex-col gap-5 relative z-10">
           <span className="font-['Fraunces',_Georgia,_serif] text-xl text-[#A8D8B4] font-semibold tracking-tight">
-            🌿 FreshMart
+            🌿 BlinkBasket
           </span>
           <h2 className="font-['Fraunces',_Georgia,_serif] text-[34px] font-semibold text-[#E8F5EE] leading-tight tracking-tight m-0">
             Fresh groceries,<br />delivered to your door
@@ -97,7 +97,7 @@ const Login: React.FC = () => {
             <p className="text-[13px] text-[#999] m-0">
               {isSignup
                 ? "Sign up to start ordering fresh groceries"
-                : "Login to your FreshMart account"}
+                : "Login to your BlinkBasket account"}
             </p>
           </div>
 
@@ -211,7 +211,7 @@ const Login: React.FC = () => {
 
           {/* Switch mode */}
           <p className="mt-[18px] text-[13px] text-[#999] text-center">
-            {isSignup ? "Already have an account?" : "New to FreshMart?"}
+            {isSignup ? "Already have an account?" : "New to BlinkBasket?"}
             <button
               onClick={switchMode}
               className="bg-none border-none text-[13px] text-[#2E7D4F] font-semibold cursor-pointer font-sans ml-1.5 p-0 hover:underline"
