@@ -111,8 +111,8 @@ const Navbar: React.FC = () => {
             <span className="hidden xs:block">BlinkBasket</span>
           </button>
 
-          {/* Desktop Nav */}
-          <div className="hidden items-center gap-8 lg:flex">
+          {/* Desktop Nav - Centered */}
+          <div className="absolute left-1/2 hidden -translate-x-1/2 transform items-center gap-8 lg:flex">
             {[
               { to: "/", label: "Home" },
               { to: "/products", label: "Products" },
@@ -132,7 +132,7 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* Right Controls */}
-          <div className="flex items-center gap-1 sm:gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 ml-auto">
             {/* Search */}
             <div className="hidden md:flex items-center border border-gray-200 rounded-xl px-3 py-2">
               <input
@@ -145,7 +145,6 @@ const Navbar: React.FC = () => {
                 }}
                 className="outline-none text-sm w-40"
               />
-
               <IoSearchSharp className="ml-2 text-gray-500" />
             </div>
 
@@ -158,7 +157,7 @@ const Navbar: React.FC = () => {
               <IoCartOutline className="text-[22px]" />
               {getCartCount() > 0 && (
                 <span
-                  key={getCartCount()} // re-mount triggers animation
+                  key={getCartCount()}
                   className="cart-badge absolute -right-0.5 -top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white ring-2 ring-white"
                 >
                   {getCartCount() > 9 ? "9+" : getCartCount()}
