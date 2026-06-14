@@ -239,3 +239,122 @@ export const logout = async (
         });
     }
 };
+
+// ==================== GET PROFILE ====================
+export const getProfile = async (
+    req: Request,
+    res: Response
+): Promise<Response> => {
+    try {
+        const authRequest = req as AuthRequest;
+        const userId = authRequest.userId;
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized",
+            });
+        }
+
+        const user = await userModel.findById(userId).select("-password");
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+
+        return res.json({
+            success: true,
+            user: {
+                _id: user._id,
+                firstName: user.name?.split(" ")[0] || "",
+                lastName: user.name?.split(" ").slice(1).join(" ") || "",
+                email: user.email,
+                phone: user.phone || "",
+                avatar: user.avatar || "",
+                joinDate: user.createdAt || new Date(),
+            },
+        });
+
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.error(error.message);
+            return res.status(500).json({
+                success: false,
+                message: error.message,
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
+};
+
+// ==================== UPDATE PROFILE ====================
+export const updateProfile = async (
+    req: Request,
+    res: Response
+): Promise<Response> => {
+    try {
+        const authRequest = req as AuthRequest;
+        const userId = authRequest.userId;
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized",
+            });
+        }
+
+        const { firstName, lastName, email, phone } = req.body;
+
+        const user = await userModel.findByIdAndUpdate(
+            userId,
+            {
+                name: `${firstName} ${lastName}`.trim(),
+                email,
+                phone,
+            },
+            { new: true }
+        ).select("-password");
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+
+        return res.json({
+            success: true,
+            user: {
+                _id: user._id,
+                firstName: user.name?.split(" ")[0] || "",
+                lastName: user.name?.split(" ").slice(1).join(" ") || "",
+                email: user.email,
+                phone: user.phone || "",
+                avatar: user.avatar || "",
+                joinDate: user.createdAt || new Date(),
+            },
+            message: "Profile updated successfully",
+        });
+
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.error(error.message);
+            return res.status(500).json({
+                success: false,
+                message: error.message,
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
+};

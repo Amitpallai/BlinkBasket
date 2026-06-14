@@ -15,7 +15,8 @@ function App() {
     "/address",
     "/confirmation",
     "/payment",
-    '/profile'
+    '/profile',
+    '/account'
   ];
   
   // ✅ Routes where both navbar and footer should be hidden

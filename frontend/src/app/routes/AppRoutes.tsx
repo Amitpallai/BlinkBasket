@@ -11,6 +11,7 @@ import AddAddress from "@/Pages/AddAddress";
 import Myorder from "@/Pages/Myorder";
 import Payment from "@/Pages/Payment";
 import Confirmation from "@/Pages/OrderConfirmatiom";
+import Profile from "@/Pages/Profile";
 import SellerLogin from "@/components/Seller/SellerLogin";
 import SellerLayout from "@/Pages/Seller/SellerLayout";
 import AddProduct from "@/Pages/Seller/AddProduct";
@@ -90,6 +91,22 @@ export default function AppRoutes({ user, isSeller }: AppRoutesProps) {
         element={
           <UserProtectedRoute canAccess={Boolean(user)}>
             <UserTransactionsPage />
+          </UserProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <UserProtectedRoute canAccess={Boolean(user)}>
+            <Profile />
+          </UserProtectedRoute>
+        }
+      />
+      <Route
+        path="/account"
+        element={
+          <UserProtectedRoute canAccess={Boolean(user)}>
+            <Profile />
           </UserProtectedRoute>
         }
       />
