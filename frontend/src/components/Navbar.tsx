@@ -11,7 +11,8 @@ const Navbar: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, logout, getCartCount } = useAppContext();
+  const { user, logout, getCartCount, searchQuery, setSearchQuery } =
+    useAppContext();
 
   // Shrink navbar on scroll
   useEffect(() => {
@@ -28,7 +29,10 @@ const Navbar: React.FC = () => {
   // Close dropdown on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setDropdownOpen(false);
       }
     };
@@ -39,14 +43,14 @@ const Navbar: React.FC = () => {
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [open]);
 
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
     `relative text-sm font-medium transition-colors duration-200 pb-0.5 ${
-      isActive
-        ? "text-green-700"
-        : "text-gray-600 hover:text-green-700"
+      isActive ? "text-green-700" : "text-gray-600 hover:text-green-700"
     }`;
 
   return (
@@ -130,13 +134,20 @@ const Navbar: React.FC = () => {
           {/* Right Controls */}
           <div className="flex items-center gap-1 sm:gap-2">
             {/* Search */}
-            <button
-              onClick={() => navigate("/products")}
-              className="rounded-xl p-2 text-gray-500 transition hover:bg-gray-100 hover:text-green-700 active:scale-95"
-              aria-label="Search products"
-            >
-              <IoSearchSharp className="text-[18px]" />
-            </button>
+            <div className="hidden md:flex items-center border border-gray-200 rounded-xl px-3 py-2">
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  navigate("/products");
+                }}
+                className="outline-none text-sm w-40"
+              />
+
+              <IoSearchSharp className="ml-2 text-gray-500" />
+            </div>
 
             {/* Cart */}
             <button
@@ -184,7 +195,11 @@ const Navbar: React.FC = () => {
                     stroke="currentColor"
                     strokeWidth="2"
                   >
-                    <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+                    <path
+                      d="M6 9l6 6 6-6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </button>
 
@@ -205,8 +220,17 @@ const Navbar: React.FC = () => {
                         onClick={() => setDropdownOpen(false)}
                         className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm text-gray-700 transition hover:bg-gray-50 hover:text-green-700"
                       >
-                        <svg className="h-4 w-4 opacity-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                          <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" strokeLinecap="round"/>
+                        <svg
+                          className="h-4 w-4 opacity-50"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                        >
+                          <path
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                            strokeLinecap="round"
+                          />
                         </svg>
                         My Orders
                       </NavLink>
@@ -215,8 +239,17 @@ const Navbar: React.FC = () => {
                         onClick={() => setDropdownOpen(false)}
                         className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm text-gray-700 transition hover:bg-gray-50 hover:text-green-700"
                       >
-                        <svg className="h-4 w-4 opacity-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                          <path d="M4 7h16M4 12h10M4 17h7M19 17l2 2 3-3" strokeLinecap="round"/>
+                        <svg
+                          className="h-4 w-4 opacity-50"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                        >
+                          <path
+                            d="M4 7h16M4 12h10M4 17h7M19 17l2 2 3-3"
+                            strokeLinecap="round"
+                          />
                         </svg>
                         Transactions
                       </NavLink>
@@ -225,17 +258,38 @@ const Navbar: React.FC = () => {
                         onClick={() => setDropdownOpen(false)}
                         className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm text-gray-700 transition hover:bg-gray-50 hover:text-green-700"
                       >
-                        <svg className="h-4 w-4 opacity-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z" strokeLinecap="round"/>
+                        <svg
+                          className="h-4 w-4 opacity-50"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                        >
+                          <path
+                            d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"
+                            strokeLinecap="round"
+                          />
                         </svg>
                         Profile
                       </NavLink>
                       <button
-                        onClick={() => { setDropdownOpen(false); logout(); }}
+                        onClick={() => {
+                          setDropdownOpen(false);
+                          logout();
+                        }}
                         className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm text-red-500 transition hover:bg-red-50"
                       >
-                        <svg className="h-4 w-4 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                          <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" strokeLinecap="round"/>
+                        <svg
+                          className="h-4 w-4 opacity-70"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                        >
+                          <path
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                            strokeLinecap="round"
+                          />
                         </svg>
                         Logout
                       </button>
@@ -292,7 +346,10 @@ const Navbar: React.FC = () => {
             <div className="p-4">
               {!user ? (
                 <button
-                  onClick={() => { setOpen(false); navigate("/login"); }}
+                  onClick={() => {
+                    setOpen(false);
+                    navigate("/login");
+                  }}
                   className="w-full rounded-xl bg-green-700 py-3 text-sm font-semibold text-white transition hover:bg-green-800 active:scale-[0.98]"
                 >
                   Login
@@ -300,19 +357,28 @@ const Navbar: React.FC = () => {
               ) : (
                 <div className="flex flex-col gap-2">
                   <button
-                    onClick={() => { setOpen(false); navigate("/my-orders"); }}
+                    onClick={() => {
+                      setOpen(false);
+                      navigate("/my-orders");
+                    }}
                     className="w-full rounded-xl bg-gray-100 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-200 active:scale-[0.98]"
                   >
                     My Orders
                   </button>
                   <button
-                    onClick={() => { setOpen(false); navigate("/profile"); }}
+                    onClick={() => {
+                      setOpen(false);
+                      navigate("/profile");
+                    }}
                     className="w-full rounded-xl bg-gray-100 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-200 active:scale-[0.98]"
                   >
                     Profile
                   </button>
                   <button
-                    onClick={() => { setOpen(false); logout(); }}
+                    onClick={() => {
+                      setOpen(false);
+                      logout();
+                    }}
                     className="w-full rounded-xl bg-red-500 py-3 text-sm font-semibold text-white transition hover:bg-red-600 active:scale-[0.98]"
                   >
                     Logout

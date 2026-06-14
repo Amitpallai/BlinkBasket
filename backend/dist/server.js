@@ -39,22 +39,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __importDefault(require("./app"));
 const env_1 = require("./config/env");
 const services_1 = require("./config/services");
-// For local development only
-if (process.env.NODE_ENV !== "production") {
-    const startServer = async () => {
-        try {
-            const { setServers } = await Promise.resolve().then(() => __importStar(require("node:dns/promises"))); // dynamic to avoid Vercel issues
-            setServers(["1.1.1.1", "8.8.8.8"]);
-            await (0, services_1.connectServices)();
-            app_1.default.listen(env_1.env.port, () => {
-                console.log(`🚀 Server running on port ${env_1.env.port}`);
-            });
-        }
-        catch (error) {
-            console.error("❌ Failed to start server:", error);
-            process.exit(1);
-        }
-    };
+const startServer = async () => {
+    try {
+        const { setServers } = await Promise.resolve().then(() => __importStar(require("node:dns/promises"))); // dynamic to avoid Vercel issues
+        setServers(["1.1.1.1", "8.8.8.8"]);
+        await (0, services_1.connectServices)();
+        app_1.default.listen(env_1.env.port, () => {
+            console.log(`🚀 Server running on port ${env_1.env.port}`);
+        });
+    }
+    catch (error) {
+        console.error("❌ Failed to start server:", error);
+        process.exit(1);
+    }
+};
+if (require.main === module) {
     startServer();
 }
 // ✅ Connect services lazily for Vercel (called on first request)

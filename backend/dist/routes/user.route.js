@@ -11,4 +11,6 @@ userRouter.post('/signup', user_controller_1.signup);
 userRouter.post('/login', user_controller_1.login);
 userRouter.get('/isauth', authUser_1.authUser, user_controller_1.isAuth);
 userRouter.get('/logout', authUser_1.authUser, user_controller_1.logout);
+userRouter.get('/profile', authUser_1.authUser, user_controller_1.getProfile);
+userRouter.put('/profile', authUser_1.authUser, user_controller_1.updateProfile);
 exports.default = userRouter;

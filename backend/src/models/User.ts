@@ -5,7 +5,9 @@ const userSchema = new mongoose.Schema({
     email: { type: String, unique: true, required: true },
     password: { type: String, required: true }, 
     cartItems: { type: Object, default: {} },
-}, { minimize: false });
+    phone: { type: String, default: "" },
+    avatar: { type: String, default: "" },
+}, { minimize: false, timestamps: true });
 
 const userModel = mongoose.model("user", userSchema);
 

@@ -19,6 +19,7 @@ import ProductList from "@/Pages/Seller/ProductList";
 import Orders from "@/Pages/Seller/Orders";
 import UserTransactionsPage from "@/features/transactions/pages/UserTransactionsPage";
 import SellerTransactionsPage from "@/features/transactions/pages/SellerTransactionsPage";
+import NotFound from "@/Pages/Notfound";
 
 type AppRoutesProps = {
   user: unknown;
@@ -55,6 +56,7 @@ const SellerProtectedRoute = ({
 export default function AppRoutes({ user, isSeller }: AppRoutesProps) {
   return (
     <Routes>
+      <Route path="*" element={<NotFound />} />
       <Route path="/" element={<Home />} />
       <Route path="/products" element={<Allproduct />} />
       <Route path="/about" element={<About />} />

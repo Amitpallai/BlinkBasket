@@ -101,6 +101,7 @@ type AppContextType = {
   showSellerSignup: boolean;
   setShowSellerSignup: React.Dispatch<React.SetStateAction<boolean>>;
   currency: string;
+  
   // User auth
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
@@ -133,6 +134,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const currency = import.meta.env.VITE_CURRENCY || "₹";
 
   // State
+  
   const [user, setUser] = useState<User>(null);
   const [seller, setSeller] = useState<Seller>(null);
   const [isSeller, setIsSeller] = useState(false);
@@ -501,6 +503,7 @@ const sellerLogin = useCallback(async (email: string, password: string) => {
         currency, login, signup, logout, sellerLogin, sellerSignup, sellerLogout,
         addToCart, updateCart, removeCart, clearCart, cartItems, setCartItems, getCartCount, getCartAmount,
         searchQuery, setSearchQuery, fetchProducts, fetchProduct, fetchCategories, isLoading,
+        
       }}
     >
       {children}

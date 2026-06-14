@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logout = exports.isAuth = exports.login = exports.signup = void 0;
+exports.updateProfile = exports.getProfile = exports.logout = exports.isAuth = exports.login = exports.signup = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const User_1 = __importDefault(require("../models/User"));
@@ -184,3 +184,101 @@ const logout = async (req, res) => {
     }
 };
 exports.logout = logout;
+// ==================== GET PROFILE ====================
+const getProfile = async (req, res) => {
+    try {
+        const authRequest = req;
+        const userId = authRequest.userId;
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized",
+            });
+        }
+        const user = await User_1.default.findById(userId).select("-password");
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+        return res.json({
+            success: true,
+            user: {
+                _id: user._id,
+                firstName: user.name?.split(" ")[0] || "",
+                lastName: user.name?.split(" ").slice(1).join(" ") || "",
+                email: user.email,
+                phone: user.phone || "",
+                avatar: user.avatar || "",
+                joinDate: user.createdAt || new Date(),
+            },
+        });
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+            return res.status(500).json({
+                success: false,
+                message: error.message,
+            });
+        }
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
+};
+exports.getProfile = getProfile;
+// ==================== UPDATE PROFILE ====================
+const updateProfile = async (req, res) => {
+    try {
+        const authRequest = req;
+        const userId = authRequest.userId;
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized",
+            });
+        }
+        const { firstName, lastName, email, phone } = req.body;
+        const user = await User_1.default.findByIdAndUpdate(userId, {
+            name: `${firstName} ${lastName}`.trim(),
+            email,
+            phone,
+        }, { new: true }).select("-password");
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+        return res.json({
+            success: true,
+            user: {
+                _id: user._id,
+                firstName: user.name?.split(" ")[0] || "",
+                lastName: user.name?.split(" ").slice(1).join(" ") || "",
+                email: user.email,
+                phone: user.phone || "",
+                avatar: user.avatar || "",
+                joinDate: user.createdAt || new Date(),
+            },
+            message: "Profile updated successfully",
+        });
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+            return res.status(500).json({
+                success: false,
+                message: error.message,
+            });
+        }
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
+};
+exports.updateProfile = updateProfile;
