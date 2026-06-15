@@ -8,7 +8,7 @@ interface Product {
   name: string;
   category: string;
   image: string[];
-  offerPrice?: number; // Made optional to match usage
+  offerPrice?: number;
   price?: number;
 }
 
@@ -44,6 +44,11 @@ const paymentStyles: Record<string, string> = {
   COD: "bg-[#f3e5f5] text-[#6a1b9a]",
   Online: "bg-[#e3f2fd] text-[#1565c0]",
 };
+
+/* ─── Skeleton Loader Component ─── */
+const Skeleton = ({ className = "" }: { className?: string }) => (
+  <div className={`animate-pulse bg-gray-200 rounded ${className}`} />
+);
 
 const Badge = ({
   label,
@@ -102,7 +107,7 @@ const Myorder: React.FC = () => {
 
   useEffect(() => {
     fetchMyOrder();
-  }, []); // Added empty dependency array - it's correct
+  }, []);
 
   // Helper function to safely get product price
   const getProductPrice = (product: Product | null | string): number => {
@@ -128,12 +133,77 @@ const Myorder: React.FC = () => {
     return product.image?.[0] || "/placeholder-image.jpg";
   };
 
+  // Loading state with skeleton
   if (loading) {
     return (
-      <div className="mt-16 pb-20 px-4 md:px-8 lg:px-16 max-w-4xl mx-auto">
-        <div className="text-center py-20">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-[#1a2e1a] border-t-transparent"></div>
-          <p className="text-[#a0966e] mt-4">Loading your orders...</p>
+      <div className="mt-20 pb-20 px-4 md:px-8 lg:px-16 max-w-6xl mx-auto">
+        {/* Header Skeleton */}
+        <div className="mb-8">
+          <Skeleton className="h-9 w-48 mb-2" />
+          <Skeleton className="h-4 w-32" />
+        </div>
+
+        {/* Orders Skeleton */}
+        <div className="space-y-6">
+          {[1, 2, 3].map((index) => (
+            <div key={index} className="bg-white border border-[#ede8df] rounded-[20px] overflow-hidden">
+              {/* Top Section Skeleton */}
+              <div className="px-6 py-4 border-b border-[#ede8df]">
+                <div className="flex justify-between items-start gap-4 flex-wrap">
+                  <div className="flex-1">
+                    <Skeleton className="h-3 w-32 mb-2" />
+                    <div className="flex gap-2 mt-2">
+                      <Skeleton className="h-5 w-16 rounded-full" />
+                      <Skeleton className="h-5 w-20 rounded-full" />
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <Skeleton className="h-7 w-24 mb-1" />
+                    <Skeleton className="h-3 w-16" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Items Section Skeleton */}
+              <div>
+                {[1, 2].map((itemIndex) => (
+                  <div
+                    key={itemIndex}
+                    className={`flex justify-between gap-4 px-5 py-4 ${
+                      itemIndex !== 2 ? "border-b border-[#f5f0e8]" : ""
+                    }`}
+                  >
+                    <div className="flex gap-4 flex-1">
+                      <Skeleton className="w-14 h-14 rounded-xl flex-shrink-0" />
+                      <div className="flex-1">
+                        <Skeleton className="h-4 w-32 mb-2" />
+                        <Skeleton className="h-3 w-24 mb-1" />
+                        <Skeleton className="h-3 w-16" />
+                      </div>
+                    </div>
+                    <Skeleton className="h-5 w-20 flex-shrink-0" />
+                  </div>
+                ))}
+              </div>
+
+              {/* Summary Section Skeleton */}
+              <div className="bg-[#f7f2ea] px-5 py-4 space-y-2">
+                <div className="flex justify-between">
+                  <Skeleton className="h-4 w-16" />
+                  <Skeleton className="h-4 w-20" />
+                </div>
+                <div className="flex justify-between">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-4 w-20" />
+                </div>
+                <div className="border-t border-[#e6dccf] pt-2 flex justify-between">
+                  <Skeleton className="h-5 w-20" />
+                  <Skeleton className="h-5 w-24" />
+                </div>
+                <Skeleton className="h-3 w-32 mt-1" />
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     );
@@ -193,7 +263,7 @@ const Myorder: React.FC = () => {
             return (
               <div
                 key={order._id}
-                className="bg-white border border-[#ede8df] rounded-[20px] overflow-hidden transition-shadow hover:shadow-md "
+                className="bg-white border border-[#ede8df] rounded-[20px] overflow-hidden transition-shadow hover:shadow-md"
               >
                 {/* Top */}
                 <div className="flex justify-between items-start gap-4 px-6 py-4 border-b border-[#ede8df] flex-wrap">
@@ -232,7 +302,7 @@ const Myorder: React.FC = () => {
                     
                     return (
                       <div
-                        key={`${order._id}-item-${index}`} // Better key for uniqueness
+                        key={`${order._id}-item-${index}`}
                         className={`flex justify-between gap-4 px-5 py-4 ${
                           index !== (order.items?.length || 0) - 1
                             ? "border-b border-[#f5f0e8]"

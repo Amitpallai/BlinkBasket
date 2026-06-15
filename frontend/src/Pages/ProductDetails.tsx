@@ -44,6 +44,157 @@ const Tag: React.FC<{ label: string; color: string; bg: string }> = ({
   </span>
 );
 
+/* ─── Skeleton Loader Component ─── */
+const Skeleton = ({ className = "" }: { className?: string }) => (
+  <div className={`animate-pulse bg-gray-200 rounded ${className}`} />
+);
+
+const ProductDetailsSkeleton: React.FC = () => {
+  return (
+    <div className="mx-auto mt-20 max-w-7xl px-3 py-6 sm:px-5 md:px-8 lg:px-16">
+      {/* Breadcrumb Skeleton */}
+      <div className="mb-6 flex flex-wrap items-center gap-2">
+        <Skeleton className="h-3 w-10" />
+        <span>›</span>
+        <Skeleton className="h-3 w-16" />
+        <span>›</span>
+        <Skeleton className="h-3 w-20" />
+        <span>›</span>
+        <Skeleton className="h-3 w-32" />
+      </div>
+
+      {/* Main Layout Skeleton */}
+      <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
+        {/* LEFT IMAGE Skeleton */}
+        <div className="w-full">
+          <div className="relative flex min-h-[260px] w-full items-center justify-center overflow-hidden rounded-2xl border border-gray-200 bg-gray-50 p-3 sm:min-h-[340px] sm:p-5 md:min-h-[430px] lg:min-h-[520px]">
+            <Skeleton className="w-32 h-32 rounded-lg" />
+          </div>
+
+          {/* Thumbnails Skeleton */}
+          <div className="mt-3 grid grid-cols-4 gap-2 sm:grid-cols-5 md:gap-3">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="overflow-hidden rounded-xl border border-gray-200 p-1">
+                <Skeleton className="h-14 w-full rounded-lg sm:h-16 md:h-20" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* RIGHT Skeleton */}
+        <div className="w-full">
+          {/* Tags Skeleton */}
+          <div className="mb-4 flex flex-wrap gap-2">
+            <Skeleton className="h-6 w-20 rounded-full" />
+            <Skeleton className="h-6 w-16 rounded-full" />
+            <Skeleton className="h-6 w-24 rounded-full" />
+          </div>
+
+          {/* Name Skeleton */}
+          <Skeleton className="h-8 w-3/4 rounded-lg sm:h-10 md:h-12" />
+
+          {/* Category Skeleton */}
+          <Skeleton className="mt-2 h-3 w-24 rounded" />
+
+          {/* Rating Skeleton */}
+          <div className="mt-4 flex flex-wrap items-center gap-1">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className="w-5 h-5 rounded" />
+            ))}
+            <Skeleton className="ml-2 h-4 w-32 rounded" />
+          </div>
+
+          {/* Price Skeleton */}
+          <div className="mt-5 flex flex-wrap items-end gap-2 sm:gap-3">
+            <Skeleton className="h-9 w-28 rounded sm:h-10" />
+            <Skeleton className="h-6 w-20 rounded" />
+          </div>
+
+          <hr className="my-5 sm:my-6" />
+
+          {/* Features Skeleton */}
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="rounded-xl border border-gray-200 bg-gray-50 p-3 text-center">
+                <Skeleton className="h-6 w-6 rounded mx-auto" />
+                <Skeleton className="mt-1 h-3 w-12 rounded mx-auto" />
+                <Skeleton className="mt-1 h-2 w-16 rounded mx-auto" />
+              </div>
+            ))}
+          </div>
+
+          <hr className="my-5 sm:my-6" />
+
+          {/* Cart Skeleton */}
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <Skeleton className="h-11 w-full max-w-[140px] rounded-xl" />
+            <Skeleton className="h-11 w-full rounded-xl sm:flex-1" />
+            <Skeleton className="h-11 w-full rounded-xl sm:w-12" />
+          </div>
+
+          {/* Free delivery Skeleton */}
+          <div className="mt-4 flex items-center gap-2">
+            <Skeleton className="h-2 w-2 rounded-full" />
+            <Skeleton className="h-3 w-48 rounded" />
+          </div>
+
+          {/* Description Skeleton */}
+          <div className="mt-6 rounded-2xl border border-green-200 bg-green-50 p-4 sm:p-5">
+            <Skeleton className="h-5 w-32 rounded" />
+            <div className="mt-2 space-y-2">
+              <Skeleton className="h-4 w-full rounded" />
+              <Skeleton className="h-4 w-5/6 rounded" />
+              <Skeleton className="h-4 w-4/5 rounded" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Related Products Skeleton */}
+      <section className="mt-14 border-t pt-10">
+        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <Skeleton className="h-7 w-48 rounded sm:h-8" />
+          <Skeleton className="h-4 w-16 rounded" />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <div key={index}>
+              <div className="rounded-[20px] border border-[#ede8df] overflow-hidden">
+                <div className="relative flex items-center justify-center h-40 bg-gray-100">
+                  <Skeleton className="w-[120px] h-[120px] rounded-lg" />
+                </div>
+                <div className="p-3.5 space-y-3 bg-[#fffdf9]">
+                  <Skeleton className="h-3 w-20 rounded" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-full rounded" />
+                    <Skeleton className="h-4 w-3/4 rounded" />
+                  </div>
+                  <div className="flex items-baseline gap-1.5">
+                    <Skeleton className="h-6 w-16 rounded" />
+                    <Skeleton className="h-4 w-12 rounded" />
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <div className="flex gap-px">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Skeleton key={i} className="w-[11px] h-[11px] rounded" />
+                      ))}
+                    </div>
+                    <Skeleton className="h-3 w-8 rounded ml-0.5" />
+                  </div>
+                  <div className="pt-1">
+                    <Skeleton className="w-full h-9 rounded-[10px]" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+};
+
 const ProductDetails: React.FC = () => {
   const { products, currency, addToCart } = useAppContext();
   const { id } = useParams<{ id: string }>();
@@ -53,8 +204,18 @@ const ProductDetails: React.FC = () => {
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
   const [wishlisted, setWishlisted] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const product = products.find((item) => item._id === id);
+
+  useEffect(() => {
+    // Simulate minimum loading time for better UX
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (!product) return;
@@ -85,6 +246,11 @@ const ProductDetails: React.FC = () => {
           ((product.price - product.offerPrice) / product.price) * 100
         )
       : null;
+
+  // Show skeleton while loading
+  if (loading) {
+    return <ProductDetailsSkeleton />;
+  }
 
   if (!product)
     return (
@@ -141,7 +307,7 @@ const ProductDetails: React.FC = () => {
             )}
 
             <img
-              src={thumbnail || ""}
+              src={thumbnail || "/placeholder.jpg"}
               alt={product.name}
               className="h-auto w-full object-contain max-h-[220px] sm:max-h-[300px] md:max-h-[390px] lg:max-h-[470px]"
             />

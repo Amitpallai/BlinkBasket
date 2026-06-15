@@ -722,7 +722,7 @@ const Profile: React.FC = () => {
       {/* Spin keyframe */}
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
 
-      <div className="min-h-screen bg-[#f5f0e8] pt-24 pb-16 px-4 sm:px-6">
+      <div className="min-h-screen bg-gray-100 pt-24 pb-16 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="mb-8">

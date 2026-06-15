@@ -17,6 +17,7 @@ type Product = {
 
 type ProductCardProps = {
   product: Product;
+  loading?: boolean;
 };
 
 const StarIcon = ({ filled }: { filled: boolean }) => (
@@ -56,7 +57,52 @@ const HeartIcon = ({ filled }: { filled: boolean }) => (
   </svg>
 );
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+// Skeleton Loader Component
+const ProductCardSkeleton: React.FC = () => {
+  return (
+    <div className="group relative rounded-[20px] border border-[#ede8df] overflow-hidden animate-pulse">
+      {/* Image Skeleton */}
+      <div className="relative flex items-center justify-center h-40 bg-gray-100">
+        <div className="w-[120px] h-[120px] bg-gray-200 rounded-lg" />
+      </div>
+
+      {/* Content Skeleton */}
+      <div className="p-3.5 space-y-3 bg-[#fffdf9]">
+        {/* Category Skeleton */}
+        <div className="h-3 bg-gray-200 rounded w-20" />
+        
+        {/* Title Skeleton */}
+        <div className="space-y-2">
+          <div className="h-4 bg-gray-200 rounded w-full" />
+          <div className="h-4 bg-gray-200 rounded w-3/4" />
+        </div>
+        
+        {/* Price Skeleton */}
+        <div className="flex items-baseline gap-1.5">
+          <div className="h-6 bg-gray-200 rounded w-16" />
+          <div className="h-4 bg-gray-200 rounded w-12" />
+        </div>
+        
+        {/* Rating Skeleton */}
+        <div className="flex items-center gap-1">
+          <div className="flex gap-px">
+            {Array.from({ length: 5 }, (_, i) => (
+              <div key={i} className="w-[11px] h-[11px] bg-gray-200 rounded" />
+            ))}
+          </div>
+          <div className="h-3 bg-gray-200 rounded w-8 ml-0.5" />
+        </div>
+        
+        {/* Button Skeleton */}
+        <div className="pt-1">
+          <div className="w-full h-9 bg-gray-200 rounded-[10px]" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ProductCard: React.FC<ProductCardProps> = ({ product, loading = false }) => {
   const { currency, addToCart, removeCart, navigate, cartItems } =
     useAppContext();
 
@@ -65,6 +111,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const handleAddToCart = (productId: string): void => {
     addToCart(productId);
   };
+
+  // Show skeleton if loading
+  if (loading) {
+    return <ProductCardSkeleton />;
+  }
 
   if (!product) return null;
 
@@ -80,7 +131,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         navigate(`/products/${product.category?.toLowerCase()}/${product._id}`);
         window.scrollTo(0, 0);
       }}
-      className="group relative  rounded-[20px] border border-[#ede8df] overflow-hidden cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(90,60,20,0.10)]"
+      className="group relative rounded-[20px] border border-[#ede8df] overflow-hidden cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(90,60,20,0.10)]"
     >
       {/* Image */}
       <div className="relative flex items-center justify-center h-40 overflow-hidden">
@@ -150,35 +201,35 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </div>
         )}
 
-<div onClick={(e) => e.stopPropagation()} className="pt-1">
-  {!cartItems?.[product._id] ? (
-    <button
-      onClick={() => handleAddToCart(product._id)}
-      className="w-full h-9 flex items-center justify-center gap-1.5 bg-green-700 text-white text-[13px] font-medium rounded-[10px] transition-all duration-200 hover:bg-green-800 active:scale-[0.97]"
-    >
-      <CartIcon />
-      Add to cart
-    </button>
-  ) : (
-    <div className="flex items-center border border-emerald-600 rounded-[10px] overflow-hidden h-9">
-      <button
-        onClick={() => removeCart(product._id)}
-        className="w-9 h-9 flex items-center justify-center text-lg bg-[#f5f0e8] text-emerald-800 hover:bg-[#ede8da] transition-colors flex-shrink-0"
-      >
-        −
-      </button>
-      <span className="flex-1 text-center text-[13px] font-semibold text-emerald-900 bg-[#fffdf9]">
-        {cartItems[product._id]}
-      </span>
-      <button
-        onClick={() => handleAddToCart(product._id)}
-        className="w-9 h-9 flex items-center justify-center text-lg bg-green-700 text-white hover:bg-green-800 transition-colors flex-shrink-0"
-      >
-        +
-      </button>
-    </div>
-  )}
-</div>
+        <div onClick={(e) => e.stopPropagation()} className="pt-1">
+          {!cartItems?.[product._id] ? (
+            <button
+              onClick={() => handleAddToCart(product._id)}
+              className="w-full h-9 flex items-center justify-center gap-1.5 bg-green-700 text-white text-[13px] font-medium rounded-[10px] transition-all duration-200 hover:bg-green-800 active:scale-[0.97]"
+            >
+              <CartIcon />
+              Add to cart
+            </button>
+          ) : (
+            <div className="flex items-center border border-emerald-600 rounded-[10px] overflow-hidden h-9">
+              <button
+                onClick={() => removeCart(product._id)}
+                className="w-9 h-9 flex items-center justify-center text-lg bg-[#f5f0e8] text-emerald-800 hover:bg-[#ede8da] transition-colors flex-shrink-0"
+              >
+                −
+              </button>
+              <span className="flex-1 text-center text-[13px] font-semibold text-emerald-900 bg-[#fffdf9]">
+                {cartItems[product._id]}
+              </span>
+              <button
+                onClick={() => handleAddToCart(product._id)}
+                className="w-9 h-9 flex items-center justify-center text-lg bg-green-700 text-white hover:bg-green-800 transition-colors flex-shrink-0"
+              >
+                +
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
