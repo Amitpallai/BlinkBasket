@@ -1,85 +1,80 @@
-# Grocery-Mart
+# BlinkBasket
 
-A full-stack e-commerce web application for seamless online fresh shopping. The platform provides a modern, intuitive interface for customers to browse products, manage carts, and place orders, while offering a robust dashboard for sellers to manage inventory and fulfill orders.
+BlinkBasket is a polished full-stack grocery e-commerce application that connects customers with sellers for browsing, ordering, and inventory management.
 
-**Live Demo:** [Coming Soon]
+The platform includes:
+- A customer storefront for product discovery, cart management, checkout, and order tracking.
+- A seller dashboard for product management, stock control, and order fulfillment.
+- Image upload support via Cloudinary and payment integration via UPI.
 
 ---
 
 ## ✨ Features
 
-### 👥 For Customers
-- **Product Browsing** - Explore products by category with search functionality
-- **Product Details** - View comprehensive product information with images
-- **Cart Management** - Add, update, or remove items with real-time updates
-- **Order Placement** - Multiple payment options (UPI, Cash on Delivery)
-- **Order Tracking** - View order history and real-time order status
-- **Address Management** - Save and manage delivery addresses
-- **User Authentication** - Secure signup, login, and profile management
-- **Transaction History** - View detailed payment and transaction records
+### Customer Experience
+- Browse products by category
+- View product details with images
+- Add products to cart and update quantities
+- Save delivery addresses
+- Place orders using UPI or Cash on Delivery
+- Track order history and order status
+- User registration, login, and profile management
 
-### 🏪 For Sellers/Admins
-- **Seller Authentication** - Secure seller login with JWT
-- **Product Management** - Add, edit, delete products with image uploads
-- **Inventory Control** - Manage stock levels and product availability
-- **Order Management** - View and process customer orders
-- **Sales Dashboard** - Track sales and transactions
-- **Cloudinary Integration** - Cloud-based image storage and optimization
+### Seller/Admin Experience
+- Secure seller authentication
+- Add, edit, and delete products
+- Manage inventory and product availability
+- View and process customer orders
+- Track transactions and sales
+- Cloudinary image uploads for product media
 
 ---
 
 ## 🛠️ Technology Stack
 
-| Layer | Technology |
-|-------|-----------|
-| **Frontend** | React 18, TypeScript, React Router, Tailwind CSS, Vite, Axios |
-| **Backend** | Node.js, Express.js, TypeScript |
-| **Database** | MongoDB with Mongoose ODM |
-| **Authentication** | JWT (JSON Web Tokens), Secure Cookies |
-| **File Uploads** | Multer, Cloudinary API |
-| **Payments** | UPI Integration |
-| **UI Components** | Shadcn/ui, React Hot Toast |
-| **Deployment** | Docker, Vercel |
+- Frontend: React, TypeScript, Vite, Tailwind CSS
+- Backend: Node.js, Express, TypeScript
+- Database: MongoDB with Mongoose
+- Authentication: JWT
+- File Uploads: Multer + Cloudinary
+- Payments: UPI integration
+- Deployment: Docker, Docker Compose
 
 ---
 
 ## 📁 Project Structure
 
 ```
-Grocery-Mart/
+BlinkBasket/
 ├── backend/
 │   ├── src/
-│   │   ├── config/          # Configuration files (CORS, environment, services)
-│   │   ├── configs/         # Setup files (Database, Cloudinary, Multer)
-│   │   ├── controllers/     # Request handlers for routes
-│   │   ├── middlewares/     # Authentication & authorization middleware
-│   │   ├── models/          # MongoDB schemas (User, Product, Order, etc.)
-│   │   ├── routes/          # API route definitions
-│   │   ├── uploads/         # Temporary file storage
-│   │   ├── app.ts           # Express app initialization
-│   │   └── server.ts        # Server entry point
+│   │   ├── config/          # Application configuration (CORS, environment, services)
+│   │   ├── configs/         # Provider setup (database, Cloudinary, Multer)
+│   │   ├── controllers/     # Route handlers
+│   │   ├── middlewares/     # Authentication and request middleware
+│   │   ├── models/          # Mongoose schemas
+│   │   ├── routes/          # API routes
+│   │   ├── uploads/         # Temporary upload storage
+│   │   ├── app.ts           # Express app setup
+│   │   └── server.ts        # Backend entrypoint
 │   ├── package.json
-│   ├── tsconfig.json
-│   ├── .env.example
-│   └── .env
+│   └── tsconfig.json
 │
 ├── frontend/
 │   ├── src/
-│   │   ├── app/
-│   │   │   ├── providers/   # App-level providers (Context, Auth)
-│   │   │   └── routes/      # Route configuration
+│   │   ├── app/             # Providers and routing
 │   │   ├── assets/          # Static assets
-│   │   ├── components/      # Reusable React components
+│   │   ├── components/      # Reusable UI components
 │   │   ├── context/         # Global state management
-│   │   ├── features/        # Feature-specific modules (transactions, etc.)
-│   │   ├── hooks/           # Custom React hooks
-│   │   ├── lib/             # Utility functions and helpers
+│   │   ├── features/        # Feature-specific modules
+│   │   ├── hooks/           # Custom hooks
+│   │   ├── lib/             # Utility functions
 │   │   ├── Pages/           # Page components
-│   │   ├── types/           # TypeScript type definitions
+│   │   ├── types/           # TypeScript definitions
 │   │   ├── App.tsx
 │   │   ├── main.tsx
 │   │   └── index.css
-│   ├── public/              # Static files
+│   ├── public/              # Static public files
 │   ├── package.json
 │   ├── tsconfig.json
 │   ├── Dockerfile
@@ -98,105 +93,97 @@ Grocery-Mart/
 
 ### Prerequisites
 
-- **Node.js** v16+ and npm/yarn
-- **MongoDB** (local or Atlas connection string)
-- **Cloudinary** account (for image uploads)
+- Node.js v16 or later
+- npm
+- MongoDB (local or Atlas)
+- Cloudinary account for image uploads
+- Docker Desktop for containerized deployment
 
 ### Backend Setup
 
-1. Navigate to backend directory:
-   ```bash
-   cd backend
-   ```
+```bash
+cd backend
+npm install
+cp .env.example .env
+```
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+Update `.env` with your configuration values, including:
+- `MONGODB_URL`
+- `JWT_SECRET`
+- `SELLER_JWT`
+- `SELLER_EMAIL`
+- `SELLER_PASSWORD`
+- `CLOUDINARY_CLOUD_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
 
-3. Create `.env` file (copy from `.env.example`):
-   ```bash
-   cp .env.example .env
-   ```
+Start the backend server:
 
-4. Configure environment variables in `.env`:
-   ```env
-   PORT=4000
-   NODE_ENV=development
+```bash
+npm run dev
+```
 
-   # Database
-   MONGODB_URL=mongodb+srv://username:password@cluster.mongodb.net/BlinkBasket
-
-   # JWT
-   JWT_SECRET=your_secure_jwt_secret_key
-   SELLER_JWT=your_seller_jwt_secret_key
-
-   # Seller Credentials
-   SELLER_EMAIL=admin@example.com
-   SELLER_PASSWORD=secure_password
-
-   # Cloudinary (Image Uploads)
-   CLOUDINARY_CLOUD_NAME=your_cloud_name
-   CLOUDINARY_API_KEY=your_api_key
-   CLOUDINARY_API_SECRET=your_api_secret
-   ```
-
-5. Start the development server:
-   ```bash
-   npm run dev
-   ```
-   Server runs on `http://localhost:4000`
+Backend API: `http://localhost:4000`
 
 ### Frontend Setup
 
-1. Navigate to frontend directory:
-   ```bash
-   cd frontend
-   ```
+```bash
+cd frontend
+npm install
+cp .env.example .env
+npm run dev
+```
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Create `.env` file (copy from `.env.example`):
-   ```bash
-   cp .env.example .env
-   ```
-
-4. Configure environment variables in `.env`:
-   ```env
-   VITE_BACKEND_URL=http://localhost:4000
-   VITE_CURRENCY=₹
-   VITE_MERCHANT_UPI=merchant@ybl
-   ```
-
-5. Start the development server:
-   ```bash
-   npm run dev
-   ```
-   Application runs on `http://localhost:5173`
+Frontend app: `http://localhost:5173`
 
 ---
 
 ## 🐳 Docker Setup
 
-### Run with Docker Compose
+Run the app with Docker Compose:
 
-1. Make sure Docker Desktop is running.
-2. Build and start both services:
-   ```bash
-   docker compose up --build
-   ```
-3. Open the app in your browser:
-   - Frontend: `http://localhost:5173`
-   - Backend API: `http://localhost:4000`
+```bash
+docker compose up --build
+```
 
-### Stop containers
+Open the app at:
+- Frontend: `http://localhost:5173`
+- Backend: `http://localhost:4000`
+
+Stop the services:
 
 ```bash
 docker compose down
 ```
+
+---
+
+## 📌 Available Scripts
+
+### Backend
+- `npm run dev` — Start backend in development mode
+- `npm run build` — Compile TypeScript
+- `npm start` — Run the compiled server
+
+### Frontend
+- `npm run dev` — Start the Vite development server
+- `npm run build` — Build the production bundle
+- `npm run preview` — Preview the production build
+- `npm run lint` — Lint the frontend codebase
+
+---
+
+## 💡 Notes
+
+- Keep secrets safe in production.
+- Confirm that MongoDB and Cloudinary credentials are correct.
+- For MongoDB Atlas, whitelist the app server IP.
+
+---
+
+## 📄 License
+
+This project is available under the MIT License.
 
 > Backend uses `backend/.env` for runtime secrets. Copy `backend/.env.example` and fill in your MongoDB and Cloudinary values before running Docker.
 
