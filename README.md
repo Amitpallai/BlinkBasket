@@ -1,6 +1,8 @@
 # BlinkBasket
 
 BlinkBasket is a polished full-stack grocery e-commerce application that connects customers with sellers for browsing, ordering, and inventory management.
+<img width="1902" height="966" alt="Screenshot 2026-11-14 232728" src="https://github.com/user-attachments/assets/21c5bad0-b514-4db6-838b-12162584c85a" />
+<img width="1917" height="1078" alt="Screenshot 2026-11-14 232703" src="https://github.com/user-attachments/assets/b32dc1c6-9d24-4d98-8104-86d71f985b6e" />
 
 The platform includes:
 - A customer storefront for product discovery, cart management, checkout, and order tracking.
