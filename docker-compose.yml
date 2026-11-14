@@ -1,24 +1,24 @@
 version: "3.9"
 
 services:
-  backend:
+  server:
     build:
-      context: ./backend
-    container_name: grocery-mart-backend
+      context: ./server
+    container_name: grocery-mart-server
     ports:
       - "4000:4000"
     env_file:
-      - ./backend/.env
+      - ./server/.env
     restart: unless-stopped
 
-  frontend:
+  client:
     build:
-      context: ./frontend
+      context: ./client
       args:
-        VITE_BACKEND_URL: http://localhost:4000
-    container_name: grocery-mart-frontend
+        VITE_server_URL: http://localhost:4000
+    container_name: grocery-mart-client
     ports:
       - "5173:80"
     depends_on:
-      - backend
+      - server
     restart: unless-stopped

@@ -32,8 +32,8 @@ The platform includes:
 
 ## 🛠️ Technology Stack
 
-- Frontend: React, TypeScript, Vite, Tailwind CSS
-- Backend: Node.js, Express, TypeScript
+- client: React, TypeScript, Vite, Tailwind CSS
+- server: Node.js, Express, TypeScript
 - Database: MongoDB with Mongoose
 - Authentication: JWT
 - File Uploads: Multer + Cloudinary
@@ -46,7 +46,7 @@ The platform includes:
 
 ```
 BlinkBasket/
-├── backend/
+├── server/
 │   ├── src/
 │   │   ├── config/          # Application configuration (CORS, environment, services)
 │   │   ├── configs/         # Provider setup (database, Cloudinary, Multer)
@@ -56,11 +56,11 @@ BlinkBasket/
 │   │   ├── routes/          # API routes
 │   │   ├── uploads/         # Temporary upload storage
 │   │   ├── app.ts           # Express app setup
-│   │   └── server.ts        # Backend entrypoint
+│   │   └── server.ts        # server entrypoint
 │   ├── package.json
 │   └── tsconfig.json
 │
-├── frontend/
+├── client/
 │   ├── src/
 │   │   ├── app/             # Providers and routing
 │   │   ├── assets/          # Static assets
@@ -99,10 +99,10 @@ BlinkBasket/
 - Cloudinary account for image uploads
 - Docker Desktop for containerized deployment
 
-### Backend Setup
+### server Setup
 
 ```bash
-cd backend
+cd server
 npm install
 cp .env.example .env
 ```
@@ -117,24 +117,24 @@ Update `.env` with your configuration values, including:
 - `CLOUDINARY_API_KEY`
 - `CLOUDINARY_API_SECRET`
 
-Start the backend server:
+Start the server server:
 
 ```bash
 npm run dev
 ```
 
-Backend API: `http://localhost:4000`
+server API: `http://localhost:4000`
 
-### Frontend Setup
+### client Setup
 
 ```bash
-cd frontend
+cd client
 npm install
 cp .env.example .env
 npm run dev
 ```
 
-Frontend app: `http://localhost:5173`
+client app: `http://localhost:5173`
 
 ---
 
@@ -147,8 +147,8 @@ docker compose up --build
 ```
 
 Open the app at:
-- Frontend: `http://localhost:5173`
-- Backend: `http://localhost:4000`
+- client: `http://localhost:5173`
+- server: `http://localhost:4000`
 
 Stop the services:
 
@@ -160,16 +160,16 @@ docker compose down
 
 ## 📌 Available Scripts
 
-### Backend
-- `npm run dev` — Start backend in development mode
+### server
+- `npm run dev` — Start server in development mode
 - `npm run build` — Compile TypeScript
 - `npm start` — Run the compiled server
 
-### Frontend
+### client
 - `npm run dev` — Start the Vite development server
 - `npm run build` — Build the production bundle
 - `npm run preview` — Preview the production build
-- `npm run lint` — Lint the frontend codebase
+- `npm run lint` — Lint the client codebase
 
 ---
 
@@ -185,7 +185,7 @@ docker compose down
 
 This project is available under the MIT License.
 
-> Backend uses `backend/.env` for runtime secrets. Copy `backend/.env.example` and fill in your MongoDB and Cloudinary values before running Docker.
+> server uses `server/.env` for runtime secrets. Copy `server/.env.example` and fill in your MongoDB and Cloudinary values before running Docker.
 
 ---
 
@@ -273,7 +273,7 @@ GET    /api/transaction/seller     - Get seller transactions
 
 ## 📦 Key Dependencies
 
-### Backend
+### server
 - `express` - Web framework
 - `mongoose` - MongoDB ODM
 - `jsonwebtoken` - JWT authentication
@@ -281,7 +281,7 @@ GET    /api/transaction/seller     - Get seller transactions
 - `cloudinary` - Cloud image storage
 - `dotenv` - Environment variables
 
-### Frontend
+### client
 - `react` - UI library
 - `react-router-dom` - Routing
 - `axios` - HTTP client
@@ -294,20 +294,20 @@ GET    /api/transaction/seller     - Get seller transactions
 
 ## 🚀 Deployment
 
-### Backend Deployment (Vercel)
+### server Deployment (Vercel)
 1. Push code to GitHub
 2. Create Vercel project
 3. Add environment variables in Vercel dashboard
 4. Deploy automatically on push
 
-### Frontend Deployment (Vercel)
+### client Deployment (Vercel)
 1. Push code to GitHub
 2. Create Vercel project
 3. Configure build settings (Vite)
 4. Deploy automatically on push
 
 **Configuration:**
-- Ensure `CORS_ORIGIN` matches frontend URL
+- Ensure `CORS_ORIGIN` matches client URL
 - Update `.env` variables for production
 - Enable HTTPS in production
 
@@ -382,11 +382,11 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 - [ ] Clone the repository
 - [ ] Install Node.js and MongoDB
 - [ ] Create Cloudinary account
-- [ ] Set up backend `.env` file
-- [ ] Set up frontend `.env` file
+- [ ] Set up server `.env` file
+- [ ] Set up client `.env` file
 - [ ] Run `npm install` in both directories
-- [ ] Start backend with `npm run dev`
-- [ ] Start frontend with `npm run dev`
+- [ ] Start server with `npm run dev`
+- [ ] Start client with `npm run dev`
 - [ ] Test payment flows and core features
 
 ---
