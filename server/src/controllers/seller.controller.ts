@@ -70,33 +70,42 @@ export const sellerLogin = async (
       });
     }
 
-    const defaultEmail = process.env.SELLER_EMAIL?.trim();
-    const defaultPassword = process.env.SELLER_PASSWORD;
-    const isConfiguredSeller =
-      !!defaultEmail &&
-      !!defaultPassword &&
-      email.toLowerCase() === defaultEmail.toLowerCase() &&
-      password === defaultPassword;
+    const configuredSeller = [
+      {
+        email: process.env.SELLER_EMAIL?.trim(),
+        password: process.env.SELLER_PASSWORD,
+      },
+      {
+        email: process.env.DEMO_SELLER_EMAIL?.trim(),
+        password: process.env.DEMO_SELLER_PASSWORD,
+      },
+    ].find(
+      (credentials) =>
+        !!credentials.email &&
+        !!credentials.password &&
+        email.toLowerCase() === credentials.email.toLowerCase() &&
+        password === credentials.password,
+    );
 
     let seller;
-    if (isConfiguredSeller && defaultEmail && defaultPassword) {
-      seller = await sellerModel.findOne({ email: defaultEmail });
+    if (configuredSeller?.email && configuredSeller.password) {
+      seller = await sellerModel.findOne({ email: configuredSeller.email });
       
       if (!seller) {
-        const hashedPassword = await bcrypt.hash(defaultPassword, 10);
+        const hashedPassword = await bcrypt.hash(configuredSeller.password, 10);
         seller = new sellerModel({
-          email: defaultEmail,
+          email: configuredSeller.email,
           password: hashedPassword,
         });
         await seller.save();
-        console.log("Configured seller created during login");
+        console.log("Configured seller account created during login");
       } else {
-        const isMatch = await bcrypt.compare(defaultPassword, seller.password);
+        const isMatch = await bcrypt.compare(configuredSeller.password, seller.password);
         if (!isMatch) {
-          const hashedPassword = await bcrypt.hash(defaultPassword, 10);
+          const hashedPassword = await bcrypt.hash(configuredSeller.password, 10);
           seller.password = hashedPassword;
           await seller.save();
-          console.log("Configured seller password updated during login");
+          console.log("Configured seller password synchronized during login");
         }
       }
     } else {

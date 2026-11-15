@@ -21,6 +21,8 @@ const SellerLogin: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const location = useLocation();
   const isInitialMount = useRef(true);
+  const demoEmail = import.meta.env.VITE_DEMO_SELLER_EMAIL?.trim() || "";
+  const demoPassword = import.meta.env.VITE_DEMO_SELLER_PASSWORD || "";
 
   const isStandalonePage = location.pathname === "/seller/login";
 
@@ -44,16 +46,24 @@ const SellerLogin: React.FC = () => {
     isInitialMount.current = false;
   }, [isSeller, navigate, location.pathname]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const submitCredentials = async (loginEmail: string, loginPassword: string) => {
     setLoading(true);
     try {
-      await sellerLogin(email, password);
+      await sellerLogin(loginEmail, loginPassword);
     } catch (error) {
       console.error("Login failed:", error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    void submitCredentials(email, password);
+  };
+
+  const handleDemoLogin = () => {
+    void submitCredentials(demoEmail, demoPassword);
   };
 
   const handleClose = useCallback(() => {
@@ -149,6 +159,27 @@ const SellerLogin: React.FC = () => {
             </p>
           )}
         </div>
+
+        {demoEmail && demoPassword && (
+          <div className="rounded-md border border-[#eadfc7] bg-[#fffaf0] p-3 text-[11.5px] text-[#715d36]">
+            <p className="m-0 font-medium">Demo seller (full store permissions)</p>
+            <p className="mt-1 mb-2">
+              Email: {demoEmail}<br />
+              Password: {demoPassword}
+            </p>
+            <p className="m-0 mb-2">
+              This account can edit products, stock, and orders in the connected store.
+            </p>
+            <button
+              type="button"
+              onClick={handleDemoLogin}
+              disabled={loading}
+              className="rounded border border-[#8b7447] bg-white px-2.5 py-1.5 font-medium text-[#715d36] hover:bg-[#fff3d8] disabled:opacity-50"
+            >
+              {loading ? "Signing in…" : "Continue as demo seller"}
+            </button>
+          </div>
+        )}
 
         <button
           type="submit"

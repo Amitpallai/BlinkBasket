@@ -13,16 +13,17 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const demoEmail = import.meta.env.VITE_DEMO_USER_EMAIL?.trim() || "";
+  const demoPassword = import.meta.env.VITE_DEMO_USER_PASSWORD || "";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const submitCredentials = async (credentials: typeof form) => {
     setLoading(true);
     try {
       const url = isSignup ? "/api/user/signup" : "/api/user/login";
-      const { data } = await axios.post(url, form);
+      const { data } = await axios.post(url, credentials);
       if (data.success) {
         toast.success(data.message || "Success");
         setUser(data.user);
@@ -36,6 +37,15 @@ const Login: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    void submitCredentials(form);
+  };
+
+  const handleDemoLogin = () => {
+    void submitCredentials({ name: "", email: demoEmail, password: demoPassword });
   };
 
   const switchMode = () => {
@@ -120,6 +130,24 @@ const Login: React.FC = () => {
               );
             })}
           </div>
+
+          {!isSignup && demoEmail && demoPassword && (
+            <div className="mb-5 rounded-xl border border-[#dce9df] bg-[#f2f8f3] p-4 text-[12px] text-[#45634d]">
+              <p className="m-0 font-semibold">Try the demo customer account</p>
+              <p className="mt-1 mb-3">
+                Email: {demoEmail}<br />
+                Password: {demoPassword}
+              </p>
+              <button
+                type="button"
+                onClick={handleDemoLogin}
+                disabled={loading}
+                className="rounded-lg border border-[#2E7D4F] bg-white px-3 py-2 font-medium text-[#2E7D4F] hover:bg-[#e8f3eb] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {loading ? "Signing in…" : "Continue as demo customer"}
+              </button>
+            </div>
+          )}
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="flex flex-col gap-3.5" noValidate>

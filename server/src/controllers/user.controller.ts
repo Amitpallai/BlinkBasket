@@ -28,7 +28,17 @@ export const signup = async (
             });
         }
 
-        const existingUser = await userModel.findOne({ email });
+        const normalizedEmail = email.trim().toLowerCase();
+        const demoEmail = process.env.DEMO_USER_EMAIL?.trim().toLowerCase();
+
+        if (demoEmail && normalizedEmail === demoEmail) {
+            return res.status(409).json({
+                success: false,
+                message: "This email is reserved for demo access",
+            });
+        }
+
+        const existingUser = await userModel.findOne({ email: normalizedEmail });
 
         if (existingUser) {
             return res.status(409).json({
@@ -41,7 +51,7 @@ export const signup = async (
 
         const user = await userModel.create({
             name,
-            email,
+            email: normalizedEmail,
             password: hashedPassword,
         });
 
@@ -101,7 +111,25 @@ export const login = async (
             });
         }
 
-        const user = await userModel.findOne({ email });
+        const normalizedEmail = email.trim().toLowerCase();
+        const demoEmail = process.env.DEMO_USER_EMAIL?.trim().toLowerCase();
+        const demoPassword = process.env.DEMO_USER_PASSWORD;
+        const isDemoLogin =
+            !!demoEmail &&
+            !!demoPassword &&
+            normalizedEmail === demoEmail &&
+            password === demoPassword;
+
+        let user = await userModel.findOne({ email: normalizedEmail });
+
+        if (!user && isDemoLogin && demoPassword) {
+            const hashedPassword = await bcrypt.hash(demoPassword, 10);
+            user = await userModel.create({
+                name: process.env.DEMO_USER_NAME?.trim() || "BlinkBasket Demo",
+                email: normalizedEmail,
+                password: hashedPassword,
+            });
+        }
 
         if (!user) {
             return res.status(401).json({

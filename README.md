@@ -115,6 +115,8 @@ Update `.env` with your configuration values, including:
 - `SELLER_JWT`
 - `SELLER_EMAIL`
 - `SELLER_PASSWORD`
+- `DEMO_USER_NAME`, `DEMO_USER_EMAIL`, and `DEMO_USER_PASSWORD`
+- `DEMO_SELLER_EMAIL` and `DEMO_SELLER_PASSWORD`
 - `CLOUDINARY_CLOUD_NAME`
 - `CLOUDINARY_API_KEY`
 - `CLOUDINARY_API_SECRET`
@@ -135,6 +137,8 @@ npm install
 cp .env.example .env
 npm run dev
 ```
+
+The `VITE_DEMO_*` values in `client/.env` must match the corresponding demo credentials in `server/.env`.
 
 client app: `http://localhost:5173`
 
@@ -312,6 +316,8 @@ GET    /api/transaction/seller     - Get seller transactions
 - Ensure `CORS_ORIGIN` matches client URL
 - Update `.env` variables for production
 - Enable HTTPS in production
+- Set the `DEMO_*` variables in the server project and matching `VITE_DEMO_*` variables in the client project.
+- Demo credentials are public. The demo seller has full access to the connected store, including products, stock, and orders; do not reuse real seller credentials.
 
 ---
 
