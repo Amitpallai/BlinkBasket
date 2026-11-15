@@ -254,7 +254,7 @@ const QRTab = ({
       {/* QR Frame */}
       <div className="relative">
         <div 
-          className="w-[248px] h-[248px] bg-[#fffdf9] border-[2px] rounded-[20px] overflow-hidden flex items-center justify-center p-3 shadow-[0_4px_24px_rgba(26,46,26,0.08)]"
+          className="w-62 h-62 bg-[#fffdf9] border-2 rounded-[20px] overflow-hidden flex items-center justify-center p-3 shadow-[0_4px_24px_rgba(26,46,26,0.08)]"
           style={{ borderColor: PRIMARY_GREEN }}
         >
           <img
