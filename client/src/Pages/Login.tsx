@@ -7,7 +7,7 @@ import {toast} from "sonner";
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { setUser } = useAppContext();
+  const { setUser, setCartItems } = useAppContext();
 
   const [isSignup, setIsSignup] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -25,8 +25,13 @@ const Login: React.FC = () => {
       const url = isSignup ? "/api/user/signup" : "/api/user/login";
       const { data } = await axios.post(url, credentials);
       if (data.success) {
+        if (data.token) localStorage.setItem("token", data.token);
+        localStorage.removeItem("seller_token");
+        document.cookie = "sellerToken=; Max-Age=0; path=/; SameSite=strict";
+        sessionStorage.removeItem("auth_expired");
         toast.success(data.message || "Success");
         setUser(data.user);
+        setCartItems(data.user?.cartItems || {});
         const redirectTo = location.state?.from?.pathname || "/";
         navigate(redirectTo, { replace: true });
       } else {
